@@ -602,7 +602,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh18070
+  m_Name: pb_Mesh18072
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -1585,6 +1585,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraSpeed: 2
+  wasdSpeed: 15
 --- !u!1 &963271268
 GameObject:
   m_ObjectHideFlags: 0
@@ -3402,7 +3403,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4536b3b01785c44478ec7a63c9e4f767, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  idOwner: 1
+  idOwner: 0
   maxPoints: 0
   currentPoints: 0
   shootOnSight: 1

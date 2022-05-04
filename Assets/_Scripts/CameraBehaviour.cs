@@ -5,6 +5,10 @@ using UnityEngine;
 public class CameraBehaviour : MonoBehaviour
 {
     [SerializeField] float cameraSpeed = 2;
+    [SerializeField] float wasdSpeed = 5;
+    [Space]
+    [SerializeField] float maxZoom = 10;
+    [SerializeField] float minZoom = 20;
 
     private Vector3 newDistance;
     private Vector3 previousPos;
@@ -12,10 +16,34 @@ public class CameraBehaviour : MonoBehaviour
     void Update()
     {
         CameraMovement();
+        Scroll();
+    }
+
+    void Scroll()
+    {
+        Vector2 scrollDelta = Input.mouseScrollDelta;
+        if (scrollDelta.y != 0)
+        {
+            if (scrollDelta.y > 0.1f)
+            {
+                if (transform.position.y < minZoom)
+                {
+                    transform.position += new Vector3(0, scrollDelta.y, 0);
+                }
+            }
+            else if (scrollDelta.y < 0.1f)
+            {
+                if (transform.position.y > maxZoom)
+                {
+                    transform.position += new Vector3(0, scrollDelta.y, 0);
+                }
+            }
+        }
     }
 
     void CameraMovement()
     {
+        transform.position += new Vector3(Input.GetAxis("Vertical"), 0, -Input.GetAxis("Horizontal")) * Time.deltaTime * wasdSpeed;
         if (Input.GetMouseButton(2))
         {
             newDistance = Input.mousePosition;

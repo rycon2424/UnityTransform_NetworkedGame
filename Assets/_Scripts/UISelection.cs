@@ -71,7 +71,7 @@ public class UISelection : MonoBehaviour
     {
         if (player.currentSelectedUnit.plan.Count < 1)
         {
-            currentVirtualPosition = player.transform.position;
+            currentVirtualPosition = player.currentSelectedUnit.transform.position;
         }
         else
         {
