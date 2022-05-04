@@ -90,7 +90,7 @@ public class NetworkedPlayer : NetworkedObject
             Unit unit = hit.transform.GetComponent<Unit>();
             if (unit != null)
             {
-                if (unit.idOwner == idOwner)
+                if (unit.idOwner == idOwner && unit.dead == false)
                 {
                     if (currentSelectedUnit)
                         DeSelectUnit();

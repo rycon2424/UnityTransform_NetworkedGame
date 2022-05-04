@@ -286,6 +286,7 @@ public class Unit : NetworkedObject
         {
             StopCoroutine("RunningPlan");
             anim.SetTrigger("Death");
+            lineOfSight.gameObject.SetActive(false);
         }
     }
 
@@ -301,6 +302,7 @@ public class Unit : NetworkedObject
 
     public void RevealMyUnit()
     {
+        lineOfSight.gameObject.SetActive(true);
         // Shows Character model
     }
 
