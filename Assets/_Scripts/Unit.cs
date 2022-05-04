@@ -226,34 +226,34 @@ public class Unit : NetworkedObject
             if (Vector3.Distance(transform.position + offset, target.transform.position + offset) > eyeRange)
             {
                 LoseTarget();
-                return false;
             }
-
-            RaycastHit hit;
-            Ray ray = new Ray(transform.position + offset, (target.transform.position + offset) - (transform.position + offset));
-
-            Vector3 targetDir = ((target.transform.position + offset) - (transform.position + offset)) * -1;
-            float angle = Vector3.Angle(targetDir, lineOfSight.forward);
-
-            angle -= 180;
-            angle = Mathf.Abs(angle);
-
-            if (angle < viewAngle)
+            else
             {
-                Debug.DrawRay(transform.position + offset, (target.transform.position + offset) - (transform.position + offset), Color.black);
-                if (Physics.Raycast(ray, out hit, eyeRange))
+                RaycastHit hit;
+                Ray ray = new Ray(transform.position + offset, (target.transform.position + offset) - (transform.position + offset));
+
+                Vector3 targetDir = ((target.transform.position + offset) - (transform.position + offset)) * -1;
+                float angle = Vector3.Angle(targetDir, lineOfSight.forward);
+
+                angle -= 180;
+                angle = Mathf.Abs(angle);
+                if (angle < viewAngle)
                 {
-                    if (hit.collider.CompareTag("Unit"))
+                    Debug.DrawRay(transform.position + offset, (target.transform.position + offset) - (transform.position + offset), Color.black);
+                    if (Physics.Raycast(ray, out hit, eyeRange))
                     {
-                        Unit u = hit.collider.GetComponent<Unit>();
-                        if (u.idOwner != idOwner)
+                        if (hit.collider.CompareTag("Unit"))
                         {
-                            if (u.dead == false)
+                            Unit u = hit.collider.GetComponent<Unit>();
+                            if (u.idOwner != idOwner)
                             {
-                                targetTransform = hit.collider.transform;
-                                agent.speed = 0;
-                                anim.SetFloat("Movement", 0);
-                                return true;
+                                if (u.dead == false)
+                                {
+                                    targetTransform = hit.collider.transform;
+                                    agent.speed = 0;
+                                    anim.SetFloat("Movement", 0);
+                                    return true;
+                                }
                             }
                         }
                     }

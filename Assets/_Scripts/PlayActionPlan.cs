@@ -6,7 +6,7 @@ using Sirenix.OdinInspector;
 public class PlayActionPlan : MonoBehaviour
 {
     [SerializeField] public List<Unit> allUnits = new List<Unit>();
-    public bool sequencing;
+    [ReadOnly] [ShowInInspector] public static bool sequencing;
 
     private NetworkedPlayer player;
 
@@ -53,6 +53,10 @@ public class PlayActionPlan : MonoBehaviour
         foreach (Unit u in allUnits)
         {
             u.FreezeUnit();
+        }
+        foreach (Unit u in allUnits)
+        {
+            u.currentPoints = u.maxPoints;
         }
         sequencing = false;
     }

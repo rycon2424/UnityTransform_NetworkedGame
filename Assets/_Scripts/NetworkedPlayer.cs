@@ -43,6 +43,11 @@ public class NetworkedPlayer : NetworkedObject
 
     void Update()
     {
+        if (PlayActionPlan.sequencing)
+        {
+            return;
+        }
+
         if (selection.menuOpen == false)
         {
             if (Input.GetMouseButtonDown(0))
