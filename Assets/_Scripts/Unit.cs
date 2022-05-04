@@ -245,12 +245,16 @@ public class Unit : NetworkedObject
                 {
                     if (hit.collider.CompareTag("Unit"))
                     {
-                        if (hit.collider.GetComponent<Unit>().idOwner != idOwner)
+                        Unit u = hit.collider.GetComponent<Unit>();
+                        if (u.idOwner != idOwner)
                         {
-                            targetTransform = hit.collider.transform;
-                            agent.speed = 0;
-                            anim.SetFloat("Movement", 0);
-                            return true;
+                            if (u.dead == false)
+                            {
+                                targetTransform = hit.collider.transform;
+                                agent.speed = 0;
+                                anim.SetFloat("Movement", 0);
+                                return true;
+                            }
                         }
                     }
                 }
@@ -268,7 +272,6 @@ public class Unit : NetworkedObject
         targetUnit.TakeDamage(damage);
         if (targetUnit.health <= 0)
         {
-            unitSight.targetList.Remove(targetUnit);
             LoseTarget();
         }
     }
@@ -286,7 +289,11 @@ public class Unit : NetworkedObject
         {
             StopCoroutine("RunningPlan");
             anim.SetTrigger("Death");
+            dead = true;
+
             lineOfSight.gameObject.SetActive(false);
+            agent.SetDestination(transform.position);
+            plan = new List<Action>();
         }
     }
 

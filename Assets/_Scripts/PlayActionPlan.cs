@@ -8,14 +8,18 @@ public class PlayActionPlan : MonoBehaviour
     [SerializeField] public List<Unit> allUnits = new List<Unit>();
     public bool sequencing;
 
+    private NetworkedPlayer player;
+
     void Start()
     {
+        player = FindObjectOfType<NetworkedPlayer>();
         allUnits.AddRange(FindObjectsOfType<Unit>());
     }
 
     [Button]
     void PerformPlan()
     {
+        player.DeSelectUnit();
         foreach (Unit u in allUnits)
         {
             u.StartPlan();
@@ -45,6 +49,7 @@ public class PlayActionPlan : MonoBehaviour
                 }
             }
         }
+        yield return new WaitForSeconds(1f);
         foreach (Unit u in allUnits)
         {
             u.FreezeUnit();
