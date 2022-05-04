@@ -16,7 +16,29 @@ public class NetworkedPlayer : NetworkedObject
     {
         cam = Camera.main;
         selection = FindObjectOfType<UISelection>();
+
+        // when online and use
+        // StartCoroutine(EstablishConnection());
+    }
+
+    IEnumerator EstablishConnection()
+    {
         // GET ID FROM SERVER (ID generated in server script)
+
+        yield return new WaitForEndOfFrame();
+        while (idOwner == 0) //if 0 = Still waiting for response
+        {
+            yield return new WaitForSeconds(0.5f);
+        }
+        List<Unit> myUnits = new List<Unit>();
+        myUnits.AddRange(FindObjectsOfType<Unit>());
+        foreach (Unit unit in myUnits)
+        {
+            if (unit.idOwner == idOwner)
+            {
+                unit.RevealMyUnit();
+            }
+        }
     }
 
     void Update()

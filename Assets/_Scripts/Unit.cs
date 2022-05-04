@@ -1,45 +1,62 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.AI;
 using Sirenix.OdinInspector;
 
 public class Unit : NetworkedObject
 {
+    [Header("Health/Damage")]
+    [SerializeField] public int health = 100;
+    [SerializeField] public int damage = 10;
+
+    [Header("ViewAngle")]
+    [SerializeField] public float viewAngle = 70;
+    [SerializeField] public float eyeRange = 10;
+
+    [Header("Read Only's")]
     [ReadOnly] public int maxPoints;
     [ReadOnly] public int currentPoints;
     [ReadOnly] [SerializeField] bool shootOnSight = true;
     [ReadOnly] [SerializeField] bool lookAtPoint;
-    [ReadOnly] [SerializeField] bool idle;
+    [ReadOnly] [SerializeField] bool idle = true;
+    [ReadOnly] public Transform targetTransform;
+
     [Header("Assign Manually")]
     [SerializeField] GameObject selectedVFX;
     [SerializeField] ParticleSystem shotVFX;
-    [SerializeField] MeshRenderer sightVisual;
+    [SerializeField] Transform lineOfSight;
     [SerializeField] UnitSight unitSight;
+    [SerializeField] Slider healthBar;
     [Space]
     public List<Action> plan = new List<Action>();
 
-    Animator anim;
+    [HideInInspector] public Animator anim;
     NavMeshAgent agent;
     LineRenderer lr;
-    Transform lineOfSight;
+    private bool breakOutCombat;
 
     Vector3 lookPoint;
     bool looking;
 
     public virtual void Start()
     {
+        healthBar.maxValue = health;
+        healthBar.value = health;
+
         maxPoints = GameBalanceManager.instance.maxPoints;
         currentPoints = maxPoints;
 
         anim = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
-        lineOfSight = sightVisual.transform.parent;
 
         lr = GetComponent<LineRenderer>();
         lr.SetPosition(0, transform.position + Vector3.up);
 
-        sightVisual.enabled = false;
+        healthBar.gameObject.SetActive(false);
+
+        FreezeUnit();
     }
 
     private void Update()
@@ -49,26 +66,36 @@ public class Unit : NetworkedObject
             Quaternion newLookAt = Quaternion.LookRotation(lookPoint - lineOfSight.position);
             newLookAt.x = 0;
             newLookAt.z = 0;
-            lineOfSight.rotation = Quaternion.Slerp(lineOfSight.rotation, newLookAt, Time.deltaTime * 5);
+            lineOfSight.rotation = Quaternion.Slerp(lineOfSight.rotation, newLookAt, Time.deltaTime * 10);
+        }
+        if (targetTransform)
+        {
+            Quaternion newLookAt = Quaternion.LookRotation(targetTransform.transform.position - transform.position);
+            newLookAt.x = 0;
+            newLookAt.z = 0;
+            transform.rotation = Quaternion.Slerp(transform.rotation, newLookAt, Time.deltaTime * 5);
         }
         if (idle)
         {
-            if (EnemyVisible())
+            if (shootOnSight)
             {
-                Debug.Log("Combat");
+                if (EnemyVisible())
+                {
+                    Debug.Log("Combat");
+                }
             }
         }
     }
 
     public void Selected()
     {
-        sightVisual.enabled = true;
+        healthBar.gameObject.SetActive(true);
         selectedVFX.SetActive(true);
     }
 
     public void DeSelected()
     {
-        sightVisual.enabled = false;
+        healthBar.gameObject.SetActive(false);
         selectedVFX.SetActive(false);
     }
 
@@ -129,6 +156,7 @@ public class Unit : NetworkedObject
                 default:
                     break;
             }
+
             agent.speed = agentSpeed;
             anim.SetFloat("Movement", agent.speed);
 
@@ -137,15 +165,12 @@ public class Unit : NetworkedObject
                 while (Vector3.Distance(transform.position, action.targetLocation) > 0.1f)
                 {
                     yield return new WaitForEndOfFrame();
-                    if (shootOnSight)
+                    while (EnemyVisible())
                     {
-                        while (EnemyVisible())
-                        {
-                            agent.speed = 0;
-                            yield return new WaitForEndOfFrame();
-                        }
+                        yield return new WaitForEndOfFrame();
                     }
                     agent.speed = agentSpeed;
+                    anim.SetFloat("Movement", agentSpeed);
                 }
             }
 
@@ -172,29 +197,108 @@ public class Unit : NetworkedObject
 
     bool EnemyVisible()
     {
-        if (unitSight.targetList.Count < 1)
+        if (breakOutCombat)
         {
+            targetTransform = null;
+            breakOutCombat = false;
+            return true;
+        }
+        if (shootOnSight == false)
+        {
+            LoseTarget();
             return false;
         }
+        if (unitSight.targetList.Count < 1)
+        {
+            LoseTarget();
+            return false;
+        }
+
         foreach (Unit target in unitSight.targetList)
         {
-            RaycastHit hit;
             Vector3 offset = new Vector3(0, 0.5f, 0);
-            Ray ray = new Ray(transform.position + offset, (target.transform.position + offset) - (transform.position + offset));
-            Debug.DrawRay(transform.position + offset, (target.transform.position + offset) - (transform.position + offset), Color.black, 2f);
-            if (Physics.Raycast(ray, out hit))
+
+            if (Vector3.Distance(transform.position + offset, target.transform.position + offset) > eyeRange)
             {
-                if (hit.collider.CompareTag("Unit"))
+                LoseTarget();
+                return false;
+            }
+
+            RaycastHit hit;
+            Ray ray = new Ray(transform.position + offset, (target.transform.position + offset) - (transform.position + offset));
+
+            Vector3 targetDir = ((target.transform.position + offset) - (transform.position + offset)) * -1;
+            float angle = Vector3.Angle(targetDir, lineOfSight.forward);
+
+            angle -= 180;
+            angle = Mathf.Abs(angle);
+
+            if (angle < viewAngle)
+            {
+                Debug.DrawRay(transform.position + offset, (target.transform.position + offset) - (transform.position + offset), Color.black);
+                if (Physics.Raycast(ray, out hit, eyeRange))
                 {
-                    if (hit.collider.GetComponent<Unit>().idOwner != idOwner)
+                    if (hit.collider.CompareTag("Unit"))
                     {
-                        return true;
+                        if (hit.collider.GetComponent<Unit>().idOwner != idOwner)
+                        {
+                            targetTransform = hit.collider.transform;
+                            agent.speed = 0;
+                            anim.SetFloat("Movement", 0);
+                            return true;
+                        }
                     }
                 }
             }
         }
+
+        LoseTarget();
         return false;
     }
+
+    public void Shoot()
+    {
+        shotVFX.Play();
+        targetTransform.GetComponent<Unit>().TakeDamage(damage);
+    }
+
+    public void RemoveLinePath()
+    {
+        lr.positionCount = 0;
+    }
+
+    public void TakeDamage(int damageTaken)
+    {
+        health -= damageTaken;
+        healthBar.value = health;
+    }
+
+    public void FreezeUnit()
+    {
+        anim.speed = 0;
+    }
+
+    public void UnFreezeUnit()
+    {
+        anim.speed = 1;
+    }
+
+    public void RevealMyUnit()
+    {
+        // Shows Character model
+    }
+
+    void LoseTarget()
+    {
+        HideCharacter();
+        targetTransform = null;
+    }
+
+    public void HideCharacter()
+    {
+        // Hides Character model
+    }
+
 
 }
 

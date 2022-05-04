@@ -5,35 +5,26 @@ using UnityEngine;
 public class UnitSight : MonoBehaviour
 {
     public List<Unit> targetList = new List<Unit>();
-
-    private NetworkedPlayer player;
+    private Unit thisUnit;
 
     private void Start()
     {
-        player = FindObjectOfType<NetworkedPlayer>();
-    }
+        thisUnit = transform.root.GetComponent<Unit>();
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Unit"))
+        targetList.AddRange(FindObjectsOfType<Unit>());
+
+        List<Unit> friendlies = new List<Unit>();
+
+        foreach (Unit unit in targetList)
         {
-            Unit unit = other.GetComponent<Unit>();
-            if (unit.idOwner != player.idOwner)
+            if (unit.idOwner == thisUnit.idOwner)
             {
-                targetList.Add(unit);
+                friendlies.Add(unit);
             }
         }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Unit"))
+        foreach (Unit unit in friendlies)
         {
-            Unit unit = other.GetComponent<Unit>();
-            if (unit.idOwner != player.idOwner)
-            {
-                targetList.Remove(unit);
-            }
+            targetList.Remove(unit);
         }
     }
 }

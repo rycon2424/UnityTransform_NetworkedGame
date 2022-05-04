@@ -6,6 +6,7 @@ using Sirenix.OdinInspector;
 public class PlayActionPlan : MonoBehaviour
 {
     [SerializeField] public List<Unit> allUnits = new List<Unit>();
+    public bool sequencing;
 
     void Start()
     {
@@ -19,5 +20,44 @@ public class PlayActionPlan : MonoBehaviour
         {
             u.StartPlan();
         }
+        StartCoroutine(Sequence());
+    }
+
+    IEnumerator Sequence()
+    {
+        sequencing = true;
+        foreach (Unit u in allUnits)
+        {
+            u.RemoveLinePath();
+            u.UnFreezeUnit();
+        }
+        while (EveryUnitCompletedPlan() == false)
+        {
+            yield return new WaitForSeconds(1f);
+            foreach (Unit u in allUnits)
+            {
+                if (u.targetTransform)
+                {
+                    u.Shoot();
+                }
+            }
+        }
+        foreach (Unit u in allUnits)
+        {
+            u.FreezeUnit();
+        }
+        sequencing = false;
+    }
+
+    bool EveryUnitCompletedPlan()
+    {
+        foreach (Unit u in allUnits)
+        {
+            if (u.plan.Count > 0)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }
