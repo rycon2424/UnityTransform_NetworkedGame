@@ -36,9 +36,12 @@ public class PlayActionPlan : MonoBehaviour
             yield return new WaitForSeconds(1f);
             foreach (Unit u in allUnits)
             {
-                if (u.targetTransform)
+                if (u.dead == false)
                 {
-                    u.Shoot();
+                    if (u.targetTransform)
+                    {
+                        u.Shoot();
+                    }
                 }
             }
         }

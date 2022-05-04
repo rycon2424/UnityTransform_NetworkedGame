@@ -8,8 +8,9 @@ using Sirenix.OdinInspector;
 public class Unit : NetworkedObject
 {
     [Header("Health/Damage")]
-    [SerializeField] public int health = 100;
-    [SerializeField] public int damage = 10;
+    public bool dead;
+    public int health = 100;
+    public int damage = 10;
 
     [Header("ViewAngle")]
     [SerializeField] public float viewAngle = 70;
@@ -61,6 +62,10 @@ public class Unit : NetworkedObject
 
     private void Update()
     {
+        if (dead)
+        {
+            return;
+        }
         if (looking)
         {
             Quaternion newLookAt = Quaternion.LookRotation(lookPoint - lineOfSight.position);
@@ -113,7 +118,7 @@ public class Unit : NetworkedObject
 
     public void StartPlan()
     {
-        StartCoroutine(RunningPlan());
+        StartCoroutine("RunningPlan");
     }
 
     IEnumerator RunningPlan()
@@ -259,7 +264,13 @@ public class Unit : NetworkedObject
     public void Shoot()
     {
         shotVFX.Play();
-        targetTransform.GetComponent<Unit>().TakeDamage(damage);
+        Unit targetUnit = targetTransform.GetComponent<Unit>();
+        targetUnit.TakeDamage(damage);
+        if (targetUnit.health <= 0)
+        {
+            unitSight.targetList.Remove(targetUnit);
+            LoseTarget();
+        }
     }
 
     public void RemoveLinePath()
@@ -271,6 +282,11 @@ public class Unit : NetworkedObject
     {
         health -= damageTaken;
         healthBar.value = health;
+        if (health <= 0)
+        {
+            StopCoroutine("RunningPlan");
+            anim.SetTrigger("Death");
+        }
     }
 
     public void FreezeUnit()
