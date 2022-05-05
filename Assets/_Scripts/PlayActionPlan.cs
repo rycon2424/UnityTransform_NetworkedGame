@@ -20,15 +20,17 @@ public class PlayActionPlan : MonoBehaviour
     void PerformPlan()
     {
         player.DeSelectUnit();
-        foreach (Unit u in allUnits)
-        {
-            u.StartPlan();
-        }
         StartCoroutine(Sequence());
     }
 
     IEnumerator Sequence()
     {
+        // Get and Send Plan online
+        foreach (Unit u in allUnits)
+        {
+            u.StartPlan();
+        }
+        yield return new WaitForEndOfFrame();
         sequencing = true;
         foreach (Unit u in allUnits)
         {
