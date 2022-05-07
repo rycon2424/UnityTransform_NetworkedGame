@@ -78,7 +78,7 @@ public class PlayActionPlan : MonoBehaviour
         }
         while (EveryUnitCompletedPlan() == false)
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.5f);
             foreach (Unit u in allUnits)
             {
                 if (u.dead == false)
@@ -89,8 +89,19 @@ public class PlayActionPlan : MonoBehaviour
                     }
                 }
             }
+            yield return new WaitForSeconds(0.5f);
         }
-        yield return new WaitForSeconds(1.5f);
+        foreach (Unit u in allUnits)
+        {
+            if (u.dead == false)
+            {
+                if (u.targetTransform)
+                {
+                    u.Shoot();
+                }
+            }
+        }
+        yield return new WaitForSeconds(1f);
         foreach (Unit u in allUnits)
         {
             u.FreezeUnit();

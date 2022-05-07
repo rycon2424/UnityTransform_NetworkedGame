@@ -133,15 +133,16 @@ public class Unit : NetworkedObject
 
         if (dead == false)
         {
-            while (EnemyVisible())
-            {
-                yield return new WaitForEndOfFrame();
-            }
             while (plan.Count > 0)
             {
                 Action action = plan[0];
 
                 shootOnSight = true;
+
+                while (EnemyVisible() && action.actionType != PlayerAction.run)
+                {
+                    yield return new WaitForEndOfFrame();
+                }
 
                 yield return new WaitForEndOfFrame();
 
@@ -150,12 +151,12 @@ public class Unit : NetworkedObject
                 switch (action.actionType)
                 {
                     case PlayerAction.walk:
-                        agentSpeed = 1;
+                        agentSpeed = 1.5f;
                         agent.SetDestination(action.targetLocation);
                         break;
                     case PlayerAction.run:
                         shootOnSight = false;
-                        agentSpeed = 2;
+                        agentSpeed = 4;
                         agent.SetDestination(action.targetLocation);
                         break;
                     case PlayerAction.look:
