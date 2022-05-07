@@ -14,24 +14,37 @@ public class PlayActionPlan : MonoBehaviour
     {
         player = FindObjectOfType<NetworkedPlayer>();
         allUnits.AddRange(FindObjectsOfType<Unit>());
+        int id = 0;
+        foreach (Unit u in allUnits) // Test if its the same in online
+        {
+            u.unitID = id++;
+        }
+    }
+
+    public void UpdateUnit(int id, Vector3 position, int action)
+    {
+
     }
 
     [Button]
-    void PerformPlan()
+    public void AmReady()
     {
         player.DeSelectUnit();
+        sequencing = true;
         StartCoroutine(Sequence());
     }
 
     IEnumerator Sequence()
     {
         // Get and Send Plan online
+
+        // while all players are not ready
+
         foreach (Unit u in allUnits)
         {
             u.StartPlan();
         }
         yield return new WaitForEndOfFrame();
-        sequencing = true;
         foreach (Unit u in allUnits)
         {
             u.RemoveLinePath();

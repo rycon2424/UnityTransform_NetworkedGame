@@ -7,6 +7,8 @@ using Sirenix.OdinInspector;
 
 public class Unit : NetworkedObject
 {
+    [ReadOnly] public int unitID;
+
     [Header("Health/Damage")]
     public bool dead;
     public int health = 100;
@@ -25,6 +27,7 @@ public class Unit : NetworkedObject
     [ReadOnly] public Transform targetTransform;
 
     [Header("Assign Manually")]
+    [SerializeField] GameObject[] skin;
     [SerializeField] GameObject selectedVFX;
     [SerializeField] ParticleSystem shotVFX;
     [SerializeField] Transform lineOfSight;
@@ -310,7 +313,10 @@ public class Unit : NetworkedObject
     public void RevealMyUnit()
     {
         lineOfSight.gameObject.SetActive(true);
-        // Shows Character model
+        foreach (var s in skin)
+        {
+            s.SetActive(true);
+        }
     }
 
     void LoseTarget()
@@ -321,7 +327,10 @@ public class Unit : NetworkedObject
 
     public void HideCharacter()
     {
-        // Hides Character model
+        foreach (var s in skin)
+        {
+            s.SetActive(false);
+        }
     }
 
 
