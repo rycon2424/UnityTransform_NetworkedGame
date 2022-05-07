@@ -131,76 +131,87 @@ public class Unit : NetworkedObject
     {
         yield return new WaitForFixedUpdate();
 
-        while (EnemyVisible())
+        if (dead == false)
         {
-            yield return new WaitForEndOfFrame();
-        }
-
-        while (plan.Count > 0)
-        {
-            Action action = plan[0];
-
-            shootOnSight = true;
-
-            yield return new WaitForEndOfFrame();
-
-            float agentSpeed = 0;
-
-            switch (action.actionType)
-            {
-                case PlayerAction.walk:
-                    agentSpeed = 1;
-                    agent.SetDestination(action.targetLocation);
-                    break;
-                case PlayerAction.run:
-                    shootOnSight = false;
-                    agentSpeed = 2;
-                    agent.SetDestination(action.targetLocation);
-                    break;
-                case PlayerAction.look:
-                    lookPoint = action.targetLocation;
-                    lookAtPoint = true;
-                    looking = true;
-                    break;
-                default:
-                    break;
-            }
-
-            agent.speed = agentSpeed;
-            anim.SetFloat("Movement", agent.speed);
-
-            if (action.actionType != PlayerAction.look)
-            {
-                while (Vector3.Distance(transform.position, action.targetLocation) > 0.1f)
-                {
-                    yield return new WaitForEndOfFrame();
-                    while (EnemyVisible())
-                    {
-                        yield return new WaitForEndOfFrame();
-                    }
-                    agent.speed = agentSpeed;
-                    anim.SetFloat("Movement", agentSpeed);
-                }
-            }
-
-            yield return new WaitForEndOfFrame();
-
             while (EnemyVisible())
             {
                 yield return new WaitForEndOfFrame();
             }
-
-            if (lookAtPoint == false)
+            while (plan.Count > 0)
             {
-                looking = false;
-                lineOfSight.localEulerAngles = Vector3.zero;
-            }
-            lookAtPoint = false;
+                Action action = plan[0];
 
-            shootOnSight = true;
-            anim.SetFloat("Movement", 0);
-            plan.Remove(action);
+                shootOnSight = true;
+
+                yield return new WaitForEndOfFrame();
+
+                float agentSpeed = 0;
+
+                switch (action.actionType)
+                {
+                    case PlayerAction.walk:
+                        agentSpeed = 1;
+                        agent.SetDestination(action.targetLocation);
+                        break;
+                    case PlayerAction.run:
+                        shootOnSight = false;
+                        agentSpeed = 2;
+                        agent.SetDestination(action.targetLocation);
+                        break;
+                    case PlayerAction.look:
+                        lookPoint = action.targetLocation;
+                        lookAtPoint = true;
+                        looking = true;
+                        break;
+                    default:
+                        break;
+                }
+
+                agent.speed = agentSpeed;
+                anim.SetFloat("Movement", agent.speed);
+
+                if (action.actionType != PlayerAction.look)
+                {
+                    while (Vector3.Distance(transform.position, action.targetLocation) > 0.1f)
+                    {
+                        yield return new WaitForEndOfFrame();
+                        while (EnemyVisible())
+                        {
+                            yield return new WaitForEndOfFrame();
+                        }
+                        agent.speed = agentSpeed;
+                        anim.SetFloat("Movement", agentSpeed);
+                    }
+                }
+
+                yield return new WaitForEndOfFrame();
+
+                while (EnemyVisible())
+                {
+                    yield return new WaitForEndOfFrame();
+                }
+
+                if (lookAtPoint == false)
+                {
+                    looking = false;
+                    lineOfSight.localEulerAngles = Vector3.zero;
+                }
+                lookAtPoint = false;
+
+                shootOnSight = true;
+                anim.SetFloat("Movement", 0);
+                plan.Remove(action);
+            }
+            while (PlayActionPlan.sequencing)
+            {
+                while (EnemyVisible())
+                {
+                    yield return new WaitForEndOfFrame();
+                }
+                yield return new WaitForEndOfFrame();
+            }
         }
+        
     }
 
     bool EnemyVisible()
@@ -221,12 +232,12 @@ public class Unit : NetworkedObject
             LoseTarget();
             return false;
         }
-
         foreach (Unit target in unitSight.targetList)
         {
             Vector3 offset = new Vector3(0, 0.5f, 0);
 
-            if (Vector3.Distance(transform.position + offset, target.transform.position + offset) > eyeRange)
+            float distance = Vector3.Distance(transform.position + offset, target.transform.position + offset);
+            if (distance > eyeRange)
             {
                 LoseTarget();
             }
@@ -240,9 +251,10 @@ public class Unit : NetworkedObject
 
                 angle -= 180;
                 angle = Mathf.Abs(angle);
+                Debug.DrawRay(transform.position + offset, (target.transform.position + new Vector3(0, 1f, 0)) - (transform.position + offset), Color.red);
                 if (angle < viewAngle)
                 {
-                    Debug.DrawRay(transform.position + offset, (target.transform.position + offset) - (transform.position + offset), Color.magenta);
+                    Debug.DrawRay(transform.position + offset, (target.transform.position + new Vector3(0, 1f, 0)) - (transform.position + offset), Color.green);
                     if (Physics.Raycast(ray, out hit, eyeRange))
                     {
                         if (hit.collider.CompareTag("Unit"))
@@ -296,7 +308,7 @@ public class Unit : NetworkedObject
             anim.SetTrigger("Death");
             dead = true;
 
-            lineOfSight.gameObject.SetActive(false);
+            unitSight.HideMesh();
             agent.SetDestination(transform.position);
             plan = new List<Action>();
         }
@@ -353,7 +365,7 @@ public class Unit : NetworkedObject
     [Button]
     public void HideCharacter()
     {
-        lineOfSight.gameObject.SetActive(false);
+        unitSight.HideMesh();
         if (dead)
         {
             return;

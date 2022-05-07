@@ -90,7 +90,7 @@ public class PlayActionPlan : MonoBehaviour
                 }
             }
         }
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.5f);
         foreach (Unit u in allUnits)
         {
             u.FreezeUnit();
