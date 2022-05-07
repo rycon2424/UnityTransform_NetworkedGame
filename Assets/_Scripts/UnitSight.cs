@@ -5,12 +5,10 @@ using UnityEngine;
 public class UnitSight : MonoBehaviour
 {
     public List<Unit> targetList = new List<Unit>();
-    private Unit thisUnit;
+    public Unit thisUnit;
 
     private void Start()
     {
-        thisUnit = transform.root.GetComponent<Unit>();
-
         targetList.AddRange(FindObjectsOfType<Unit>());
 
         List<Unit> friendlies = new List<Unit>();

@@ -15,7 +15,7 @@ public class PlayActionPlan : MonoBehaviour
 
     private NetworkedPlayer player;
 
-    void Start()
+    void Awake()
     {
         player = FindObjectOfType<NetworkedPlayer>();
         allUnits.AddRange(FindObjectsOfType<Unit>());
