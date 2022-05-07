@@ -23,6 +23,7 @@ public class PlayActionPlan : MonoBehaviour
         foreach (Unit u in allUnits) // Test if its the same in online
         {
             u.unitID = id++;
+            u.HideCharacter();
         }
     }
 

@@ -20,11 +20,12 @@ public class NetworkedPlayer : NetworkedObject
 
     public void ReceivedID()
     {
-        StartCoroutine(EstablishConnection());
+        StartCoroutine(FindMyUnits());
     }
 
-    IEnumerator EstablishConnection()
+    IEnumerator FindMyUnits()
     {
+        yield return new WaitForEndOfFrame();
         List<Unit> myUnits = new List<Unit>();
         myUnits.AddRange(FindObjectsOfType<Unit>());
         foreach (Unit unit in myUnits)

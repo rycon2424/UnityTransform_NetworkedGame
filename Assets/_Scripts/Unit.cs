@@ -23,8 +23,8 @@ public class Unit : NetworkedObject
     [ReadOnly] public int currentPoints;
     [ReadOnly] [SerializeField] bool shootOnSight = true;
     [ReadOnly] [SerializeField] bool lookAtPoint;
-    [ReadOnly] [SerializeField] bool idle = true;
     [ReadOnly] public Transform targetTransform;
+    [ReadOnly][SerializeField] Unit targetUnit;
 
     [Header("Assign Manually")]
     [SerializeField] GameObject[] skin;
@@ -83,16 +83,11 @@ public class Unit : NetworkedObject
             newLookAt.z = 0;
             transform.rotation = Quaternion.Slerp(transform.rotation, newLookAt, Time.deltaTime * 5);
         }
-        if (idle)
-        {
-            if (shootOnSight)
-            {
-                if (EnemyVisible())
-                {
-                    Debug.Log("Combat");
-                }
-            }
-        }
+    }
+
+    public void ResetUnit()
+    {
+        
     }
 
     public void Selected()
@@ -134,8 +129,6 @@ public class Unit : NetworkedObject
 
     IEnumerator RunningPlan()
     {
-        idle = false;
-
         yield return new WaitForFixedUpdate();
 
         while (EnemyVisible())
@@ -208,7 +201,6 @@ public class Unit : NetworkedObject
             anim.SetFloat("Movement", 0);
             plan.Remove(action);
         }
-        idle = true;
     }
 
     bool EnemyVisible()
@@ -250,7 +242,7 @@ public class Unit : NetworkedObject
                 angle = Mathf.Abs(angle);
                 if (angle < viewAngle)
                 {
-                    Debug.DrawRay(transform.position + offset, (target.transform.position + offset) - (transform.position + offset), Color.black);
+                    Debug.DrawRay(transform.position + offset, (target.transform.position + offset) - (transform.position + offset), Color.magenta);
                     if (Physics.Raycast(ray, out hit, eyeRange))
                     {
                         if (hit.collider.CompareTag("Unit"))
@@ -263,6 +255,8 @@ public class Unit : NetworkedObject
                                     targetTransform = hit.collider.transform;
                                     agent.speed = 0;
                                     anim.SetFloat("Movement", 0);
+                                    targetUnit = u;
+                                    u.RevealCharacter();
                                     return true;
                                 }
                             }
@@ -280,7 +274,7 @@ public class Unit : NetworkedObject
     {
         shotVFX.Play();
         Unit targetUnit = targetTransform.GetComponent<Unit>();
-        targetUnit.TakeDamage(damage);
+        targetUnit.TakeDamage(damage, this);
         if (targetUnit.health <= 0)
         {
             LoseTarget();
@@ -292,7 +286,7 @@ public class Unit : NetworkedObject
         lr.positionCount = 0;
     }
 
-    public void TakeDamage(int damageTaken)
+    public void TakeDamage(int damageTaken, Unit attacker)
     {
         health -= damageTaken;
         healthBar.value = health;
@@ -306,6 +300,17 @@ public class Unit : NetworkedObject
             agent.SetDestination(transform.position);
             plan = new List<Action>();
         }
+        //else
+        //{
+        //    if (shootOnSight)
+        //    {
+        //        if (targetTransform = null)
+        //        {
+        //            targetTransform = attacker.transform;
+        //            targetUnit = attacker;
+        //        }
+        //    }
+        //}
     }
 
     public void FreezeUnit()
@@ -318,6 +323,15 @@ public class Unit : NetworkedObject
         anim.speed = 1;
     }
 
+    public void RevealCharacter()
+    {
+        foreach (var s in skin)
+        {
+            s.SetActive(true);
+        }
+    }
+
+    [Button]
     public void RevealMyUnit()
     {
         lineOfSight.gameObject.SetActive(true);
@@ -329,12 +343,21 @@ public class Unit : NetworkedObject
 
     void LoseTarget()
     {
-        HideCharacter();
+        if (targetUnit)
+            targetUnit.HideCharacter();
+
+        targetUnit = null;
         targetTransform = null;
     }
 
+    [Button]
     public void HideCharacter()
     {
+        lineOfSight.gameObject.SetActive(false);
+        if (dead)
+        {
+            return;
+        }
         foreach (var s in skin)
         {
             s.SetActive(false);
