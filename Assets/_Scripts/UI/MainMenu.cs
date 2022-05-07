@@ -20,6 +20,7 @@ public class MainMenu : MonoBehaviour
 
     public void UpdatePlayerCount(int players)
     {
+        PlayActionPlan.playerCount = players;
         playerCount.text = "Players = " + players.ToString() + "/3";
     }
 

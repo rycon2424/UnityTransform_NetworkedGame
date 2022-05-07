@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using Sirenix.OdinInspector;
 
 public class PlayActionPlan : MonoBehaviour
@@ -8,6 +9,9 @@ public class PlayActionPlan : MonoBehaviour
     [SerializeField] public List<Unit> allUnits = new List<Unit>();
     [ReadOnly] [ShowInInspector] public static bool sequencing;
     [ReadOnly] [ShowInInspector] public static bool ready;
+    [ReadOnly] [ShowInInspector] public static int playerCount;
+    [Space]
+    public UnityEvent OnSequenceEnd;
 
     private NetworkedPlayer player;
 
@@ -52,7 +56,7 @@ public class PlayActionPlan : MonoBehaviour
     }
 
     [Button]
-    public void AmReady()
+    public void StartSequence()
     {
         player.DeSelectUnit();
         StartCoroutine(Sequence());
@@ -94,7 +98,9 @@ public class PlayActionPlan : MonoBehaviour
         {
             u.currentPoints = u.maxPoints;
         }
+        ready = false;
         sequencing = false;
+        OnSequenceEnd.Invoke();
     }
 
     bool EveryUnitCompletedPlan()

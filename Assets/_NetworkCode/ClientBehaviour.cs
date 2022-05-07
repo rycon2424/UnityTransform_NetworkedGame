@@ -12,6 +12,7 @@ public class ClientBehaviour : MonoBehaviour
     [Sirenix.OdinInspector.ReadOnly] public NetworkedPlayer player;
     [Sirenix.OdinInspector.ReadOnly] public PlayActionPlan sequencer;
     public MainMenu mainMenu;
+    public InGameUI ingameUI;
     [Space]
     public NetworkDriver m_Driver;
     public NetworkConnection m_Connection;
@@ -112,8 +113,11 @@ public class ClientBehaviour : MonoBehaviour
         // 2 [1]=UnitID [2]=ActionType [3]=PositionX [4]=PositionY [5]PositionZ
         // 3 [1]=ID [2] 1=Ready 2=not Ready
         // 4 Ask server for ID
-        // 5 Update player count
+        // 5 Update player count [1]=count
         // 6 Update player list
+        // 7 Start Simulation
+        // 8 Update ready number [1]=count
+
         switch (parsedBytes[0])
         {
             case 0: // Received ID
@@ -137,6 +141,13 @@ public class ClientBehaviour : MonoBehaviour
                 break;
             case 6: // UpdatePlayerList
                 mainMenu.UpdatePlayerList(NetworkMessageHandler.GetOnlyCharacters(input));
+                break;
+            case 7: // Start Simulation
+                ingameUI.UpdateReadyAmount(PlayActionPlan.playerCount);
+                sequencer.StartSequence();
+                break;
+            case 8: // UpdateReadyNumber
+                ingameUI.UpdateReadyAmount((int)parsedBytes[1]);
                 break;
             default:
                 Debug.Log($"Client does not know what to do with {input}");

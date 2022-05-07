@@ -11,6 +11,7 @@ public class ServerBehaviour : MonoBehaviour
     private NativeList<NetworkConnection> m_Connections;
 
     public int idToGive = 0;
+    public int playersReady = 0;
     public int maxAllowedPlayers = 3;
     [Space]
     public List<string> players = new List<string>();
@@ -149,6 +150,16 @@ public class ServerBehaviour : MonoBehaviour
                     );
                 break;
             case 3: // a Player is Ready
+                playersReady++;
+                if (playersReady == PlayActionPlan.playerCount)
+                {
+                    SendToAll("7");
+                    playersReady = 0;
+                }
+                else
+                {
+                    SendToAll("8 " + playersReady);
+                }
                 break;
             case 4:
                 players.Add(input.ToString());
