@@ -11,8 +11,12 @@ public class ServerBehaviour : MonoBehaviour
     private NativeList<NetworkConnection> m_Connections;
 
     public int idToGive = 0;
+    public int maxAllowedPlayers = 3;
+    [Space]
+    public List<string> players = new List<string>();
 
     private bool creatingConnection;
+    private bool gameStarted;
 
     public void StartServer()
     {
@@ -61,6 +65,14 @@ public class ServerBehaviour : MonoBehaviour
 
     void AcceptNewConnections()
     {
+        if (gameStarted)
+        {
+            return;
+        }
+        if (m_Connections.Length == maxAllowedPlayers)
+        {
+            return;
+        }
         NetworkConnection c;
         while ((c = m_Driver.Accept()) != default(NetworkConnection))
         {
@@ -81,7 +93,6 @@ public class ServerBehaviour : MonoBehaviour
                 if (cmd == NetworkEvent.Type.Data)
                 {
                     var number = stream.ReadFixedString128();
-
                     ConvertData(number, m_Connections[i]);
                 }
                 else if (cmd == NetworkEvent.Type.Disconnect)
@@ -95,6 +106,7 @@ public class ServerBehaviour : MonoBehaviour
 
     public void StartGame()
     {
+        gameStarted = true;
         SendToAll("4");
     }
 
@@ -110,14 +122,14 @@ public class ServerBehaviour : MonoBehaviour
 
     public void ConvertData(FixedString128Bytes input, NetworkConnection sender)
     {
-        List<int> parsedByes = NetworkMessageHandler.GetDigits(input);
+        List<float> parsedBytes = NetworkMessageHandler.GetDigits(input);
         // [0] What to do 
         // 1 [1]=ID
         // 2 [1]=UnitID [2]=ActionType [3]=PositionX [4]=PositionY [5]PositionZ
+        // 3 [1]=ID [2] 1=Ready 0=not Ready
+        // 4 Send Updated Playerlist
 
-        // 3 [2] 1=Ready 2=not Ready
-
-        switch (parsedByes[0])
+        switch (parsedBytes[0])
         {
             case 0: // Request ID
                 SendID(sender);
@@ -125,10 +137,30 @@ public class ServerBehaviour : MonoBehaviour
             case 1: // Disconnect
                 break;
             case 2: // Update Units and send to all except player who send
+                Debug.Log("Server received unit Update");
+                SendToAll
+                    (
+                    "2 "
+                    + parsedBytes[1] + " "
+                    + parsedBytes[2] + " " 
+                    + parsedBytes[3] + " " 
+                    + parsedBytes[4] + " " 
+                    + parsedBytes[5]
+                    );
                 break;
             case 3: // a Player is Ready
                 break;
+            case 4:
+                players.Add(input.ToString());
+                string playerNamesList = "6 ";
+                foreach (string pName in players)
+                {
+                    playerNamesList += pName + " ";
+                }
+                SendToAll(playerNamesList);
+                break;
             default:
+                Debug.Log($"Server does not know what to do with {input}");
                 break;
         }
     }
@@ -145,15 +177,42 @@ public class ServerBehaviour : MonoBehaviour
 
 public static class NetworkMessageHandler
 {
-    public static List<int> GetDigits(FixedString128Bytes input)
+    public static List<float> GetDigits(FixedString128Bytes input)
     {
         string phrase = input.ToString();
         string[] words = phrase.Split(' ');
-        List<int> parsedNumbers = new List<int>();
+        List<float> parsedNumbers = new List<float>();
+        float parsedWord = 0;
         foreach (var word in words)
         {
-            parsedNumbers.Add(int.Parse(word));
+            bool getDigit = float.TryParse(word, out parsedWord);
+            if (getDigit)
+            {
+                parsedNumbers.Add(parsedWord);
+            }
         }
         return parsedNumbers;
+    }
+
+    public static List<string> GetOnlyCharacters(FixedString128Bytes input)
+    {
+        string phrase = input.ToString();
+        string[] words = phrase.Split(' ');
+        List<string> allValues = new List<string>();
+        foreach (var word in words)
+        {
+            allValues.Add(word);
+        }
+        List<string> onlyCharacterWords = new List<string>();
+        int temp = 0;
+        foreach (var word in allValues)
+        {
+            bool isChar = int.TryParse(word, out temp);
+            if (isChar == false)
+            {
+                onlyCharacterWords.Add(word);
+            }
+        }
+        return onlyCharacterWords;
     }
 }

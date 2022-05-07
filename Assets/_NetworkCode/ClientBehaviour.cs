@@ -9,9 +9,9 @@ using TMPro;
 
 public class ClientBehaviour : MonoBehaviour
 {
-    public NetworkedPlayer player;
-    public PlayActionPlan sequencer;
-    public TMP_Text playerCount;
+    [Sirenix.OdinInspector.ReadOnly] public NetworkedPlayer player;
+    [Sirenix.OdinInspector.ReadOnly] public PlayActionPlan sequencer;
+    public MainMenu mainMenu;
     [Space]
     public NetworkDriver m_Driver;
     public NetworkConnection m_Connection;
@@ -36,12 +36,23 @@ public class ClientBehaviour : MonoBehaviour
         creatingConnection = true;
     }
 
+    public void Disconnect()
+    {
+        m_Connection.Disconnect(m_Driver);
+        m_Connection = default(NetworkConnection);
+    }
+
     [Button]
     public void GetID() // Calls when game starts
     {
-        string serverReponse = "0";
+        SendServerRequest("0");
+    }
+
+    public void SendServerRequest(string request)
+    {
+        string serverRequest = request;
         m_Driver.BeginSend(m_Connection, out var writer);
-        writer.WriteFixedString128(serverReponse);
+        writer.WriteFixedString128(serverRequest);
         m_Driver.EndSend(writer);
     }
 
@@ -56,7 +67,6 @@ public class ClientBehaviour : MonoBehaviour
             return;
 
         m_Driver.ScheduleUpdate().Complete();
-
         if (!m_Connection.IsCreated)
         {
             Debug.Log("Something went wrong during connect");
@@ -65,21 +75,21 @@ public class ClientBehaviour : MonoBehaviour
 
         DataStreamReader stream;
         NetworkEvent.Type cmd;
-
         while ((cmd = m_Connection.PopEvent(m_Driver, out stream)) != NetworkEvent.Type.Empty)
         {
             switch (cmd)
             {
                 case NetworkEvent.Type.Empty:
+                    Debug.Log("Connecting?3");
                     break;
 
                 case NetworkEvent.Type.Data:
                     var dataReceived = stream.ReadFixedString128();
-                    Debug.Log("Got the value = " + dataReceived + " back from the server");
                     ConvertData(dataReceived);
                     break;
 
                 case NetworkEvent.Type.Connect:
+                    SendServerRequest("4 " + mainMenu.GetPlayerName());
                     Debug.Log("We are now connected to the server");
                     break;
 
@@ -96,37 +106,40 @@ public class ClientBehaviour : MonoBehaviour
 
     public void ConvertData(FixedString128Bytes input)
     {
-        List<int> parsedBytes = NetworkMessageHandler.GetDigits(input);
+        List<float> parsedBytes = NetworkMessageHandler.GetDigits(input);
         // [0] What to do 
-        // 1 ID Received
+        // 0 [1]=ID Received
         // 2 [1]=UnitID [2]=ActionType [3]=PositionX [4]=PositionY [5]PositionZ
         // 3 [1]=ID [2] 1=Ready 2=not Ready
         // 4 Ask server for ID
-
+        // 5 Update player count
+        // 6 Update player list
         switch (parsedBytes[0])
         {
             case 0: // Received ID
-                player.idOwner = parsedBytes[1];
+                player.idOwner = (int)parsedBytes[1];
+                player.ReceivedID();
                 break;
-            case 1: // Disconnect
-                // Show somewhere that player {ID} disconnected
+            case 1:
                 break;
             case 2: // Update a Players Units
-                for (int i = 1; i < parsedBytes.Count; i+= 5)
-                {
-                    Vector3 pos = new Vector3(parsedBytes[i + 2], parsedBytes[i + 3], parsedBytes[i + 4]);
-                    sequencer.UpdateUnit(parsedBytes[i], pos, parsedBytes [i + 1]);
-                }
+                Vector3 pos = new Vector3(parsedBytes[3], parsedBytes[4], parsedBytes[5]);
+                sequencer.UpdateUnit((int)parsedBytes[1], pos, (int)parsedBytes[2]);
                 break;
             case 3: // a Player is Ready
                 break;
             case 4: // Ask server for ID
                 GetID();
+                mainMenu.StartGame();
                 break;
             case 5: // UpdatePlayerCount
-                playerCount.text =  "Players = " + parsedBytes[1].ToString();
+                mainMenu.UpdatePlayerCount((int)parsedBytes[1]);
+                break;
+            case 6: // UpdatePlayerList
+                mainMenu.UpdatePlayerList(NetworkMessageHandler.GetOnlyCharacters(input));
                 break;
             default:
+                Debug.Log($"Client does not know what to do with {input}");
                 break;
         }
     }

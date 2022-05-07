@@ -9,27 +9,22 @@ public class NetworkedPlayer : NetworkedObject
     [ReadOnly] public Camera cam;
     [ReadOnly] public Unit currentSelectedUnit;
     [ReadOnly] [SerializeField] UISelection selection;
-    [Space]
-    [SerializeField] GameObject unitMenu;
+    [ReadOnly] [SerializeField] ClientBehaviour client;
 
     void Start()
     {
         cam = Camera.main;
         selection = FindObjectOfType<UISelection>();
+        client = FindObjectOfType<ClientBehaviour>();
+    }
 
-        // when online and use
-        // StartCoroutine(EstablishConnection());
+    public void ReceivedID()
+    {
+        StartCoroutine(EstablishConnection());
     }
 
     IEnumerator EstablishConnection()
     {
-        // GET ID FROM SERVER (ID generated in server script)
-
-        yield return new WaitForEndOfFrame();
-        while (idOwner == 0) //if 0 = Still waiting for response
-        {
-            yield return new WaitForSeconds(0.5f);
-        }
         List<Unit> myUnits = new List<Unit>();
         myUnits.AddRange(FindObjectsOfType<Unit>());
         foreach (Unit unit in myUnits)
@@ -37,13 +32,14 @@ public class NetworkedPlayer : NetworkedObject
             if (unit.idOwner == idOwner)
             {
                 unit.RevealMyUnit();
+                yield return new WaitForEndOfFrame();
             }
         }
     }
 
     void Update()
     {
-        if (PlayActionPlan.sequencing)
+        if (PlayActionPlan.sequencing || PlayActionPlan.ready)
         {
             return;
         }
@@ -125,7 +121,15 @@ public class NetworkedPlayer : NetworkedObject
 
     public void SetChoice(Vector3 targetPos, PlayerAction action)
     {
-        currentSelectedUnit.SetRoute(targetPos, action);
+        client.SendServerRequest
+            ("2 " + 
+            currentSelectedUnit.unitID + " " +
+            (int)action + " " +
+            targetPos.x + " " +
+            targetPos.y + " " +
+            targetPos.z 
+            );
+        currentSelectedUnit.SetPlan(targetPos, action);
     }
 
 }

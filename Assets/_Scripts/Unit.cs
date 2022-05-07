@@ -17,7 +17,7 @@ public class Unit : NetworkedObject
     [Header("ViewAngle")]
     [SerializeField] public float viewAngle = 70;
     [SerializeField] public float eyeRange = 10;
-
+    
     [Header("Read Only's")]
     [ReadOnly] public int maxPoints;
     [ReadOnly] public int currentPoints;
@@ -107,7 +107,8 @@ public class Unit : NetworkedObject
         selectedVFX.SetActive(false);
     }
 
-    public void SetRoute(Vector3 targetLocation, PlayerAction action)
+    // Create Action
+    public void SetPlan(Vector3 targetLocation, PlayerAction action)
     {
         if (action != PlayerAction.look)
         {
@@ -115,8 +116,8 @@ public class Unit : NetworkedObject
             lr.positionCount = length + 1;
             lr.SetPosition(length, targetLocation + Vector3.up);
         }
-        Action newAction = new Action(targetLocation, action);
-        plan.Add(newAction);
+        //Action newAction = new Action(targetLocation, action);
+        //plan.Add(newAction);
     }
 
     public void StartPlan()
@@ -281,7 +282,7 @@ public class Unit : NetworkedObject
 
     public void RemoveLinePath()
     {
-        lr.positionCount = 0;
+        lr.positionCount = 1;
     }
 
     public void TakeDamage(int damageTaken)

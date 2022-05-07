@@ -7,6 +7,7 @@ public class PlayActionPlan : MonoBehaviour
 {
     [SerializeField] public List<Unit> allUnits = new List<Unit>();
     [ReadOnly] [ShowInInspector] public static bool sequencing;
+    [ReadOnly] [ShowInInspector] public static bool ready;
 
     private NetworkedPlayer player;
 
@@ -23,23 +24,43 @@ public class PlayActionPlan : MonoBehaviour
 
     public void UpdateUnit(int id, Vector3 position, int action)
     {
-
+        foreach (var unit in allUnits)
+        {
+            if (unit.unitID == id)
+            {
+                PlayerAction actionType = PlayerAction.walk;
+                switch (action)
+                {
+                    case 0:
+                        actionType = PlayerAction.walk;
+                        break;
+                    case 1:
+                        actionType = PlayerAction.run;
+                        break;
+                    case 2:
+                        actionType = PlayerAction.look;
+                        break;
+                    default:
+                        break;
+                }
+                Action actionToAdd = new Action(position, actionType);
+                unit.plan.Add(actionToAdd);
+                return;
+            }
+        }
+        Debug.Log("Found no unit with ID " + id);
     }
 
     [Button]
     public void AmReady()
     {
         player.DeSelectUnit();
-        sequencing = true;
         StartCoroutine(Sequence());
     }
 
     IEnumerator Sequence()
     {
-        // Get and Send Plan online
-
-        // while all players are not ready
-
+        sequencing = true;
         foreach (Unit u in allUnits)
         {
             u.StartPlan();
