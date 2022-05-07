@@ -110,14 +110,21 @@ public class Unit : NetworkedObject
     // Create Action
     public void SetPlan(Vector3 targetLocation, PlayerAction action)
     {
+        if (lr.positionCount == 0)
+        {
+            SetLineRendererPos(transform.position);
+        }
         if (action != PlayerAction.look)
         {
-            int length = lr.positionCount;
-            lr.positionCount = length + 1;
-            lr.SetPosition(length, targetLocation + Vector3.up);
+            SetLineRendererPos(targetLocation);
         }
-        //Action newAction = new Action(targetLocation, action);
-        //plan.Add(newAction);
+    }
+
+    void SetLineRendererPos(Vector3 targetLocation)
+    {
+        int length = lr.positionCount;
+        lr.positionCount = length + 1;
+        lr.SetPosition(length, targetLocation + Vector3.up);
     }
 
     public void StartPlan()
@@ -282,7 +289,7 @@ public class Unit : NetworkedObject
 
     public void RemoveLinePath()
     {
-        lr.positionCount = 1;
+        lr.positionCount = 0;
     }
 
     public void TakeDamage(int damageTaken)
