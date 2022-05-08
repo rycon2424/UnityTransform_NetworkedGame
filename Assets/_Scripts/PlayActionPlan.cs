@@ -104,6 +104,11 @@ public class PlayActionPlan : MonoBehaviour
                 if (u.targetTransform)
                 {
                     u.Shoot();
+                    u.RevealCharacter();
+                }
+                else
+                {
+                    u.HideCharacter();
                 }
             }
         }
