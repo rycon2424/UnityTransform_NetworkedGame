@@ -8,6 +8,7 @@ using Sirenix.OdinInspector;
 public class Unit : NetworkedObject
 {
     [ReadOnly] public int unitID;
+    [ReadOnly] public bool isMine;
 
     [Header("Health/Damage")]
     public bool dead;
@@ -366,6 +367,10 @@ public class Unit : NetworkedObject
     [Button]
     public void HideCharacter()
     {
+        if (isMine)
+        {
+            return;
+        }
         unitSight.HideMesh();
         if (dead)
         {

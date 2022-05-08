@@ -32,6 +32,7 @@ public class NetworkedPlayer : NetworkedObject
         {
             if (unit.idOwner == idOwner)
             {
+                unit.isMine = true;
                 unit.RevealMyUnit();
                 yield return new WaitForEndOfFrame();
             }
