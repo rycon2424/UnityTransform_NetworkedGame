@@ -9,11 +9,19 @@ public class InGameUI : MonoBehaviour
     public ClientBehaviour client;
     public TMP_Text readyText;
     public Button readyButton;
+    [Space]
+    public Transform cameraT;
+    public Slider cameraPov;
 
     private void Start()
     {
         client = FindObjectOfType<ClientBehaviour>();
         UpdateReadyAmount(0);
+    }
+
+    public void UpdateCamPov()
+    {
+        cameraT.eulerAngles = new Vector3(cameraPov.value , cameraT.eulerAngles.y, cameraT.eulerAngles.z);
     }
 
     public void ResetButton()

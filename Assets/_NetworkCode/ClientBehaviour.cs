@@ -37,6 +37,14 @@ public class ClientBehaviour : MonoBehaviour
         creatingConnection = true;
     }
 
+    public void SendServerRequest(string request)
+    {
+        string serverRequest = request;
+        m_Driver.BeginSend(m_Connection, out var writer);
+        writer.WriteFixedString128(serverRequest);
+        m_Driver.EndSend(writer);
+    }
+
     public void Disconnect()
     {
         m_Connection.Disconnect(m_Driver);
@@ -47,14 +55,6 @@ public class ClientBehaviour : MonoBehaviour
     public void GetID() // Calls when game starts
     {
         SendServerRequest("0");
-    }
-
-    public void SendServerRequest(string request)
-    {
-        string serverRequest = request;
-        m_Driver.BeginSend(m_Connection, out var writer);
-        writer.WriteFixedString128(serverRequest);
-        m_Driver.EndSend(writer);
     }
 
     public void OnDestroy()

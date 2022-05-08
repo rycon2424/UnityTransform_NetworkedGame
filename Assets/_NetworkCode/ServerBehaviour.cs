@@ -14,6 +14,7 @@ public class ServerBehaviour : MonoBehaviour
     public int playersReady = 0;
     public int maxAllowedPlayers = 3;
     [Space]
+    public MainMenu mainMenu;
     public List<string> players = new List<string>();
 
     private bool creatingConnection;
@@ -62,6 +63,7 @@ public class ServerBehaviour : MonoBehaviour
                 --i;
             }
         }
+        mainMenu.EnoughPlayersToStart(m_Connections.Length);
     }
 
     void AcceptNewConnections()
@@ -103,6 +105,11 @@ public class ServerBehaviour : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void UpdatePlayerCount()
+    {
+
     }
 
     public void StartGame()
