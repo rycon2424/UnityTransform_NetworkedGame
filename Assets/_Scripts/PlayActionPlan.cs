@@ -68,6 +68,7 @@ public class PlayActionPlan : MonoBehaviour
         sequencing = true;
         foreach (Unit u in allUnits)
         {
+            u.HideCharacter();
             u.StartPlan();
         }
         yield return new WaitForEndOfFrame();
@@ -85,7 +86,12 @@ public class PlayActionPlan : MonoBehaviour
                 {
                     if (u.targetTransform)
                     {
+                        u.RevealCharacter();
                         u.Shoot();
+                    }
+                    else
+                    {
+                        u.HideCharacter();
                     }
                 }
             }

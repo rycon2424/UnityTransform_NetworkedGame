@@ -32,7 +32,7 @@ public class Unit : NetworkedObject
     [SerializeField] GameObject selectedVFX;
     [SerializeField] ParticleSystem shotVFX;
     [SerializeField] Transform lineOfSight;
-    [SerializeField] UnitSight unitSight;
+    public UnitSight unitSight;
     [SerializeField] Slider healthBar;
     [Space]
     public List<Action> plan = new List<Action>();
@@ -224,11 +224,6 @@ public class Unit : NetworkedObject
             breakOutCombat = false;
             return true;
         }
-        if (shootOnSight == false)
-        {
-            LoseTarget();
-            return false;
-        }
         if (unitSight.targetList.Count < 1)
         {
             LoseTarget();
@@ -264,13 +259,18 @@ public class Unit : NetworkedObject
                             Unit u = hit.collider.GetComponent<Unit>();
                             if (u.idOwner != idOwner)
                             {
+                                u.RevealCharacter();
+                                if (shootOnSight == false)
+                                {
+                                    LoseTarget();
+                                    return false;
+                                }
                                 if (u.dead == false)
                                 {
                                     targetTransform = hit.collider.transform;
                                     agent.speed = 0;
                                     anim.SetFloat("Movement", 0);
                                     targetUnit = u;
-                                    u.RevealCharacter();
                                     return true;
                                 }
                             }
@@ -314,17 +314,6 @@ public class Unit : NetworkedObject
             agent.SetDestination(transform.position);
             plan = new List<Action>();
         }
-        //else
-        //{
-        //    if (shootOnSight)
-        //    {
-        //        if (targetTransform = null)
-        //        {
-        //            targetTransform = attacker.transform;
-        //            targetUnit = attacker;
-        //        }
-        //    }
-        //}
     }
 
     public void FreezeUnit()
