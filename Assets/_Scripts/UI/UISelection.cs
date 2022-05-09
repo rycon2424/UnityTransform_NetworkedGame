@@ -138,7 +138,7 @@ public class UISelection : MonoBehaviour
 
     void SelectionMade(Vector3 pos, PlayerAction action)
     {
-        player.SetChoice(pos, action);
+        player.SetChoice(pos, action, currentVirtualPosition);
         UpdatePlayerVirtualLocation();
         HideOptions();
     }

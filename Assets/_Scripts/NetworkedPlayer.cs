@@ -122,7 +122,7 @@ public class NetworkedPlayer : NetworkedObject
         selection.HideOptions();
     }
 
-    public void SetChoice(Vector3 targetPos, PlayerAction action)
+    public void SetChoice(Vector3 targetPos, PlayerAction action, Vector3 virtualPosition)
     {
         client.SendServerRequest
             ("2 " + 
@@ -132,7 +132,7 @@ public class NetworkedPlayer : NetworkedObject
             targetPos.y + " " +
             targetPos.z 
             );
-        currentSelectedUnit.SetPlan(targetPos, action);
+        currentSelectedUnit.SetPlan(targetPos, action, virtualPosition);
     }
 
 }

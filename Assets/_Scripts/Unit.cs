@@ -104,7 +104,7 @@ public class Unit : NetworkedObject
     }
 
     // Create Action
-    public void SetPlan(Vector3 targetLocation, PlayerAction action)
+    public void SetPlan(Vector3 targetLocation, PlayerAction action, Vector3 virtualPosition)
     {
         if (lr.positionCount == 0)
         {
@@ -113,6 +113,10 @@ public class Unit : NetworkedObject
         if (action != PlayerAction.look)
         {
             SetLineRendererPos(targetLocation);
+        }
+        if (action == PlayerAction.look)
+        {
+            EyeVisualPool.instance.PlaceEye(virtualPosition, targetLocation);
         }
     }
 
