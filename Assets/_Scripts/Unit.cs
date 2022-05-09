@@ -312,6 +312,7 @@ public class Unit : NetworkedObject
 
             unitSight.HideMesh();
             agent.SetDestination(transform.position);
+            GetComponent<Collider>().enabled = false;
             plan = new List<Action>();
         }
     }
