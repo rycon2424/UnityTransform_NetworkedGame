@@ -6,6 +6,7 @@ using Sirenix.OdinInspector;
 public class GameBalanceManager : MonoBehaviour
 {
     public int maxPoints = 40;
+    public int unitsPerTeam = 4;
     [Space]
     public int walkCost = 15;
     public int runCost = 10;
