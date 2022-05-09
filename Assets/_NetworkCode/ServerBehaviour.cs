@@ -134,7 +134,7 @@ public class ServerBehaviour : MonoBehaviour
         // [0] What to do 
         // 1 [1]=ID
         // 2 [1]=UnitID [2]=ActionType [3]=PositionX [4]=PositionY [5]PositionZ
-        // 3 [1]=ID [2] 1=Ready 0=not Ready
+        // 3 Player is ready
         // 4 Send Updated Playerlist
 
         switch (parsedBytes[0])

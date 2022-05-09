@@ -113,17 +113,47 @@ public class PlayActionPlan : MonoBehaviour
             }
         }
         yield return new WaitForSeconds(1f);
+        int winner = -1;
+        if (CheckIfGameOver(out winner))
+        {
+            Debug.Log("winner = " + winner);
+        }
+        else
+        {
+            foreach (Unit u in allUnits)
+            {
+                u.FreezeUnit();
+            }
+            foreach (Unit u in allUnits)
+            {
+                u.currentPoints = u.maxPoints;
+            }
+            ready = false;
+            sequencing = false;
+            OnSequenceEnd.Invoke();
+        }
+    }
+
+    bool CheckIfGameOver(out int winner)
+    {
+        int aliveOwnerID = -1;
         foreach (Unit u in allUnits)
         {
-            u.FreezeUnit();
+            if (u.dead == false)
+            {
+                if (aliveOwnerID == -1)
+                {
+                    aliveOwnerID = u.idOwner;
+                }
+                else if (aliveOwnerID != u.idOwner)
+                {
+                    winner = -1;
+                    return false;
+                }
+            }
         }
-        foreach (Unit u in allUnits)
-        {
-            u.currentPoints = u.maxPoints;
-        }
-        ready = false;
-        sequencing = false;
-        OnSequenceEnd.Invoke();
+        winner = aliveOwnerID;
+        return true;
     }
 
     bool EveryUnitCompletedPlan()
