@@ -9,6 +9,11 @@ public class CameraBehaviour : MonoBehaviour
     [Space]
     [SerializeField] float maxZoom = 10;
     [SerializeField] float minZoom = 20;
+    [Space]
+    [SerializeField] float maxXPos;
+    [SerializeField] float minXPos;
+    [SerializeField] float maxZPos;
+    [SerializeField] float minZPos;
 
     private Vector3 newDistance;
     private Vector3 previousPos;
@@ -17,6 +22,27 @@ public class CameraBehaviour : MonoBehaviour
     {
         CameraMovement();
         Scroll();
+        Boundaries();
+    }
+
+    void Boundaries()
+    {
+        if (transform.position.x > maxXPos)
+        {
+            transform.position = new Vector3(maxXPos, transform.position.y, transform.position.z);
+        }
+        else if (transform.position.x < minXPos)
+        {
+            transform.position = new Vector3(minXPos, transform.position.y, transform.position.z);
+        }
+        if (transform.position.z > maxZPos)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y, maxZPos);
+        }
+        else if (transform.position.z < minZPos)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y, minZPos);
+        }
     }
 
     void Scroll()
