@@ -28,8 +28,8 @@ public class PlayActionPlan : MonoBehaviour
     void UpdateUnits()
     {
         allUnits.AddRange(FindObjectsOfType<Unit>());
-        int id = 0;
-        foreach (Unit u in allUnits) // Test if its the same in online
+        int id = 1;
+        foreach (Unit u in allUnits)
         {
             u.unitID = id++;
             u.HideCharacter();
