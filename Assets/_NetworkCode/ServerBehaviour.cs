@@ -23,8 +23,8 @@ public class ServerBehaviour : MonoBehaviour
     public void StartServer()
     {
         m_Driver = NetworkDriver.Create();
-        var endpoint = NetworkEndPoint.AnyIpv4; // The local address to which the client will connect to is 127.0.0.1
-        endpoint.Port = 9000;
+        var endpoint = NetworkEndPoint.AnyIpv4;
+        endpoint.Port = 8080;
 
         if (m_Driver.Bind(endpoint) != 0)
             Debug.Log("Failed to bind to port 9000");

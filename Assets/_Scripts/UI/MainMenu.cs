@@ -10,6 +10,8 @@ public class MainMenu : MonoBehaviour
     [SerializeField] int playersToPlay = 2;
     [Space]
     [SerializeField] TMP_InputField playerName;
+    public TMP_InputField ipAdress;
+    [Space]
     [SerializeField] TMP_Text playerCount;
     [SerializeField] TMP_Text playerNames;
     [Space]

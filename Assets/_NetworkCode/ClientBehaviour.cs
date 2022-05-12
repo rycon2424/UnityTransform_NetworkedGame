@@ -30,8 +30,10 @@ public class ClientBehaviour : MonoBehaviour
         m_Driver = NetworkDriver.Create();
         m_Connection = default(NetworkConnection);
 
-        var endpoint = NetworkEndPoint.LoopbackIpv4;
-        endpoint.Port = 9000;
+        ushort port = 8080;
+
+        var endpoint = NetworkEndPoint.Parse(mainMenu.ipAdress.text, port, NetworkFamily.Ipv4);
+        endpoint.Port = port;
         m_Connection = m_Driver.Connect(endpoint);
 
         creatingConnection = true;
