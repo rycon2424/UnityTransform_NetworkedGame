@@ -18,6 +18,15 @@ public class PlayActionPlan : MonoBehaviour
     void Awake()
     {
         player = FindObjectOfType<NetworkedPlayer>();
+        foreach (Unit u in allUnits)
+        {
+            u.HideCharacter();
+        }
+    }
+
+    [Button]
+    void UpdateUnits()
+    {
         allUnits.AddRange(FindObjectsOfType<Unit>());
         int id = 0;
         foreach (Unit u in allUnits) // Test if its the same in online
@@ -56,7 +65,6 @@ public class PlayActionPlan : MonoBehaviour
         Debug.Log("Found no unit with ID " + id);
     }
 
-    [Button]
     public void StartSequence()
     {
         player.DeSelectUnit();
