@@ -18,6 +18,8 @@ public class MainMenu : MonoBehaviour
     [SerializeField] Button startGameButton;
     [Space]
     [SerializeField] UnityEvent onGameStart;
+    [Header("Lobby")]
+    [SerializeField] GameObject[] players;
 
     public string GetPlayerName()
     {
@@ -40,6 +42,19 @@ public class MainMenu : MonoBehaviour
     {
         PlayActionPlan.playerCount = players;
         playerCount.text = "Players = " + players.ToString() + "/3";
+        UpdatePlayerVisibility(players);
+    }
+
+    void UpdatePlayerVisibility(int pCount)
+    {
+        foreach (var p in players)
+        {
+            p.SetActive(false);
+        }
+        for (int i = 0; i < pCount; i++)
+        {
+            players[i].SetActive(true);
+        }
     }
     
     public void UpdatePlayerList(List<string> names)
