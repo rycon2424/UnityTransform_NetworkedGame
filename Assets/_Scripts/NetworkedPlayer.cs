@@ -18,7 +18,7 @@ public class NetworkedPlayer : NetworkedObject
         client = FindObjectOfType<ClientBehaviour>();
     }
 
-    public void ReceivedID()
+    public void EnableUnits()
     {
         StartCoroutine(FindMyUnits());
     }

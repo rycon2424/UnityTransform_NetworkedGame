@@ -49,8 +49,8 @@ public class ClientBehaviour : MonoBehaviour
 
     public void Disconnect()
     {
+        SendServerRequest("4 " + mainMenu.GetPlayerName());
         m_Connection.Disconnect(m_Driver);
-        m_Connection = default(NetworkConnection);
     }
 
     [Button]
@@ -124,7 +124,7 @@ public class ClientBehaviour : MonoBehaviour
         {
             case 0: // Received ID
                 player.idOwner = (int)parsedBytes[1];
-                player.ReceivedID();
+                player.EnableUnits();
                 break;
             case 1:
                 break;
@@ -143,6 +143,7 @@ public class ClientBehaviour : MonoBehaviour
                 break;
             case 6: // UpdatePlayerList
                 mainMenu.UpdatePlayerList(NetworkMessageHandler.GetOnlyCharacters(input));
+                Debug.Log("received list update");
                 break;
             case 7: // Start Simulation
                 ingameUI.UpdateReadyAmount(PlayActionPlan.playerCount);

@@ -38,8 +38,14 @@ public class ServerBehaviour : MonoBehaviour
 
     public void OnDestroy()
     {
-        m_Driver.Dispose();
+        DisconnectServer();
         m_Connections.Dispose();
+    }
+
+    public void DisconnectServer()
+    {
+        creatingConnection = false;
+        m_Driver.Dispose();
     }
 
     void Update()
@@ -61,6 +67,7 @@ public class ServerBehaviour : MonoBehaviour
             {
                 m_Connections.RemoveAtSwapBack(i);
                 --i;
+                SendToAll("5 " + m_Connections.Length);
             }
         }
         mainMenu.EnoughPlayersToStart(m_Connections.Length);
@@ -105,11 +112,6 @@ public class ServerBehaviour : MonoBehaviour
                 }
             }
         }
-    }
-
-    public void UpdatePlayerCount()
-    {
-
     }
 
     public void StartGame()
@@ -169,18 +171,27 @@ public class ServerBehaviour : MonoBehaviour
                 }
                 break;
             case 4:
-                players.Add(input.ToString());
-                string playerNamesList = "6 ";
-                foreach (string pName in players)
-                {
-                    playerNamesList += pName + " ";
-                }
-                SendToAll(playerNamesList);
+                if (players.Contains(input.ToString()))
+                    players.Remove(input.ToString());
+                else
+                    players.Add(input.ToString());
+
+                CreatePlayerList();
                 break;
             default:
                 Debug.Log($"Server does not know what to do with {input}");
                 break;
         }
+    }
+
+    void CreatePlayerList()
+    {
+        string playerNamesList = "6 ";
+        foreach (string pName in players)
+        {
+            playerNamesList += pName + " ";
+        }
+        SendToAll(playerNamesList);
     }
 
     void SendID(NetworkConnection sender)

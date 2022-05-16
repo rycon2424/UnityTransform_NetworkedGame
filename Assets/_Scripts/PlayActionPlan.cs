@@ -18,10 +18,11 @@ public class PlayActionPlan : MonoBehaviour
     void Awake()
     {
         player = FindObjectOfType<NetworkedPlayer>();
-        foreach (Unit u in allUnits)
-        {
-            u.HideCharacter();
-        }
+    }
+
+    public void FindUnits()
+    {
+        allUnits.AddRange(FindObjectsOfType<Unit>());
     }
 
     [Button]

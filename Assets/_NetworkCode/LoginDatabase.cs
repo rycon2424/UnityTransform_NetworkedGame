@@ -82,7 +82,7 @@ public class LoginDatabase : MonoBehaviour
         else if (www.downloadHandler.text[0] == '0')
         {
             infoText.text = $"Logged in as {loginName.text}!";
-            username.text = "Welcome " + loginName.text;
+            username.text = loginName.text;
             //Debug.Log($"Login succes, high score = {www.downloadHandler.text[1]}");
             loginDone.Invoke();
         }

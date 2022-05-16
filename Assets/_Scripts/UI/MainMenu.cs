@@ -9,7 +9,7 @@ public class MainMenu : MonoBehaviour
 {
     [SerializeField] int playersToPlay = 2;
     [Space]
-    [SerializeField] TMP_InputField playerName;
+    [SerializeField] TMP_Text playerName;
     public TMP_InputField ipAdress;
     [Space]
     [SerializeField] TMP_Text playerCount;
@@ -41,7 +41,7 @@ public class MainMenu : MonoBehaviour
         PlayActionPlan.playerCount = players;
         playerCount.text = "Players = " + players.ToString() + "/3";
     }
-
+    
     public void UpdatePlayerList(List<string> names)
     {
         string players = "";
