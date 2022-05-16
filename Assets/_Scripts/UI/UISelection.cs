@@ -22,7 +22,7 @@ public class UISelection : MonoBehaviour
     [ShowIf("@showReferences")] [SerializeField] ActionButton runCost;
     [ShowIf("@showReferences")] [SerializeField] ActionButton lookCost;
     [Space]
-    [SerializeField][ReadOnly] NetworkedPlayer player;
+    [SerializeField] NetworkedPlayer player;
     [Space]
     [ShowIf("@showPrivateValues")][SerializeField] int currentWalkCost;
     [ShowIf("@showPrivateValues")][SerializeField] int currentRunCost;

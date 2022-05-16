@@ -6,17 +6,10 @@ using Sirenix.OdinInspector;
 public class NetworkedPlayer : NetworkedObject
 {
     [Space]
-    [ReadOnly] public Camera cam;
+    public Camera cam;
+    [SerializeField] UISelection selection;
+    [SerializeField] ClientBehaviour client;
     [ReadOnly] public Unit currentSelectedUnit;
-    [ReadOnly] [SerializeField] UISelection selection;
-    [ReadOnly] [SerializeField] ClientBehaviour client;
-
-    void Start()
-    {
-        cam = Camera.main;
-        selection = FindObjectOfType<UISelection>();
-        client = FindObjectOfType<ClientBehaviour>();
-    }
 
     public void EnableUnits()
     {

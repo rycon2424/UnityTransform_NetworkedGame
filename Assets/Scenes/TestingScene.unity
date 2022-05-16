@@ -2706,6 +2706,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4350820883327034, guid: 03924d6d4b842a04ca7ddadc3aec7336, type: 3}
   m_PrefabInstance: {fileID: 220258957}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &223974228 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 546819312859660909, guid: 87ff8a1d2f23aa246a8edb228523b230, type: 3}
+  m_PrefabInstance: {fileID: 546819313258252732}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b93766e451938d4e9117b49e4fc0999, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &240593736
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21750,7 +21761,7 @@ MonoBehaviour:
   lookCost:
     cost: {fileID: 1900298558}
     button: {fileID: 1716017408}
-  player: {fileID: 0}
+  player: {fileID: 223974228}
   currentWalkCost: 0
   currentRunCost: 0
   currentLookCost: 0
@@ -60440,9 +60451,21 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 546819312859660909, guid: 87ff8a1d2f23aa246a8edb228523b230, type: 3}
+      propertyPath: cam
+      value: 
+      objectReference: {fileID: 1136472090}
+    - target: {fileID: 546819312859660909, guid: 87ff8a1d2f23aa246a8edb228523b230, type: 3}
+      propertyPath: client
+      value: 
+      objectReference: {fileID: 1937843388}
+    - target: {fileID: 546819312859660909, guid: 87ff8a1d2f23aa246a8edb228523b230, type: 3}
       propertyPath: idOwner
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 546819312859660909, guid: 87ff8a1d2f23aa246a8edb228523b230, type: 3}
+      propertyPath: selection
+      value: 
+      objectReference: {fileID: 1233254500349013}
     - target: {fileID: 546819313540243986, guid: 87ff8a1d2f23aa246a8edb228523b230, type: 3}
       propertyPath: m_Name
       value: Player+PlayerControls
