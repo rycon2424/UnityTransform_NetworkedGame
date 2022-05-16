@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using TMPro;
 
@@ -19,6 +20,10 @@ public class LoginDatabase : MonoBehaviour
     [Header("Register")]
     public TMP_InputField registerName;
     public TMP_InputField registerPassword;
+    [Space]
+    public UnityEvent loginDone = new UnityEvent();
+    public UnityEvent registrationDone = new UnityEvent();
+
 
     #region registration
     public void Button_Register()
@@ -36,17 +41,18 @@ public class LoginDatabase : MonoBehaviour
         yield return www.SendWebRequest();
         if (www.result == UnityWebRequest.Result.ConnectionError)
         {
-            Debug.Log(www.error);
+            infoText.text = www.error;
         }
         else
         {
             if (www.downloadHandler.text != "0")
             {
-                Debug.Log($"{www.downloadHandler.text}");
+                infoText.text = www.downloadHandler.text;
             }
             else
             {
-                Debug.Log("Completed Registration");
+                registrationDone.Invoke();
+                infoText.text = "Completed Registration";
             }
         }
     }
@@ -70,15 +76,17 @@ public class LoginDatabase : MonoBehaviour
         yield return www.SendWebRequest();
         if (www.result == UnityWebRequest.Result.ConnectionError)
         {
-            Debug.Log(www.error);
+            infoText.text = www.error;
         }
         else if (www.downloadHandler.text[0] == '0')
         {
-            Debug.Log($"Login succes, high score = {www.downloadHandler.text[1]}");
+            infoText.text = $"Logged in as {loginName.text}!";
+            //Debug.Log($"Login succes, high score = {www.downloadHandler.text[1]}");
+            loginDone.Invoke();
         }
         else
         {
-            Debug.Log(www.downloadHandler.text);
+            infoText.text = www.downloadHandler.text;
         }
     }
 

@@ -7,10 +7,10 @@
 
    $namecheckquery= "SELECT username, salt, hash, score FROM UsersLogin WHERE username= '$username';";
 
-   $namecheck = mysqli_query($mysqli, $namecheckquery) or die(" ERROR CODE 2: namecheck failed");
+   $namecheck = mysqli_query($mysqli, $namecheckquery) or die(" ERROR CODE 2: namecheck failed DATABASE Error");
     if (mysqli_num_rows($namecheck) != 1)
     {
-        echo" ERROR CODE 3:does not exist";
+        echo" ERROR CODE 6: User does not exist or entered wrong password";
         exit();
     }
 
@@ -22,7 +22,7 @@
    $loginhash = crypt($password, $salt); 
    if ($hash != $loginhash)
    {
-       echo "6: Incorrect password for" . " - " . $username. " - "; //error code #6 - password does not hash to match table 
+       echo" ERROR CODE 6: User does not exist or entered wrong password";
        exit();
    }
 
