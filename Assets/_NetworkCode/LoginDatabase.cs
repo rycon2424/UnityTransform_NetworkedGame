@@ -9,6 +9,7 @@ using TMPro;
 public class LoginDatabase : MonoBehaviour
 {
     [Header("Pages")]
+    public TMP_Text username;
     public GameObject registerPage;
     public GameObject loginPage;
     public TMP_Text infoText;
@@ -81,6 +82,7 @@ public class LoginDatabase : MonoBehaviour
         else if (www.downloadHandler.text[0] == '0')
         {
             infoText.text = $"Logged in as {loginName.text}!";
+            username.text = "Welcome " + loginName.text;
             //Debug.Log($"Login succes, high score = {www.downloadHandler.text[1]}");
             loginDone.Invoke();
         }
