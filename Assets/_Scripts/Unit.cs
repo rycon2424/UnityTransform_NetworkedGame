@@ -116,7 +116,7 @@ public class Unit : NetworkedObject
         }
         if (action == PlayerAction.look)
         {
-            EyeVisualPool.instance.PlaceEye(virtualPosition, targetLocation);
+            VisualIconsPool.instance.PlaceEye(virtualPosition, targetLocation);
         }
     }
 

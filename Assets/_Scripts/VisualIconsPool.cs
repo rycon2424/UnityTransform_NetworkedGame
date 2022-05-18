@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EyeVisualPool : MonoBehaviour
+public class VisualIconsPool : MonoBehaviour
 {
     public List<GameObject> eyeVisuals = new List<GameObject>();
 
     private List<GameObject> eyeUsed = new List<GameObject>();
 
-    public static EyeVisualPool instance;
+    public static VisualIconsPool instance;
 
     private void Awake()
     {
@@ -34,10 +34,10 @@ public class EyeVisualPool : MonoBehaviour
         to += Vector3.up;
 
         GameObject newEye = eyeVisuals[0];
-        EyeVisual ev = newEye.GetComponent<EyeVisual>();
+        VisualIcon ev = newEye.GetComponent<VisualIcon>();
 
         newEye.SetActive(true);
-        ev.SetEye(from, to);
+        ev.SetVisual(from, to);
 
         eyeVisuals.Remove(newEye);
         eyeUsed.Add(newEye);

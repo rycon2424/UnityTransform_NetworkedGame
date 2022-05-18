@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.45130002, g: 0.50095385, b: 0.57321674, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -7306,7 +7306,7 @@ Light:
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 1
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -7357,8 +7357,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 712612257}
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: 89.26664, y: -0.52374274, z: -125.38025}
+  m_LocalRotation: {x: 0.01895155, y: -0.9601688, z: 0.2706999, w: 0.06662162}
+  m_LocalPosition: {x: -1.3590735, y: 13.936797, z: 18.278852}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -61184,6 +61184,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2099650754, guid: b604c0c1e0fa822408d03d187c2ddf59, type: 3}
+      propertyPath: m_Name
+      value: VisualSpawner
+      objectReference: {fileID: 0}
     - target: {fileID: 2198531170753315404, guid: b604c0c1e0fa822408d03d187c2ddf59, type: 3}
       propertyPath: allUnits.Array.size
       value: 0

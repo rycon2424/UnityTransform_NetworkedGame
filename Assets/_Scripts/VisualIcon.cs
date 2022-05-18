@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EyeVisual : MonoBehaviour
+public class VisualIcon : MonoBehaviour
 {
     [SerializeField] LineRenderer lineRenderer;
 
-    public void SetEye(Vector3 from, Vector3 to)
+    public void SetVisual(Vector3 from, Vector3 to)
     {
         if (lineRenderer == null)
             lineRenderer = GetComponent<LineRenderer>();

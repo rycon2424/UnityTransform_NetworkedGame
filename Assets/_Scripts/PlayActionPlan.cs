@@ -86,7 +86,7 @@ public class PlayActionPlan : MonoBehaviour
             u.RemoveLinePath();
             u.UnFreezeUnit();
         }
-        EyeVisualPool.instance.ResetAllEyes();
+        VisualIconsPool.instance.ResetAllEyes();
         while (EveryUnitCompletedPlan() == false)
         {
             yield return new WaitForSeconds(0.5f);
