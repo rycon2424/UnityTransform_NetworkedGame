@@ -21,12 +21,14 @@ public class UISelection : MonoBehaviour
     [ShowIf("@showReferences")] [SerializeField] ActionButton walkCost;
     [ShowIf("@showReferences")] [SerializeField] ActionButton runCost;
     [ShowIf("@showReferences")] [SerializeField] ActionButton lookCost;
+    [ShowIf("@showReferences")] [SerializeField] ActionButton grenadeCost;
     [Space]
     [SerializeField] NetworkedPlayer player;
     [Space]
     [ShowIf("@showPrivateValues")][SerializeField] int currentWalkCost;
     [ShowIf("@showPrivateValues")][SerializeField] int currentRunCost;
     [ShowIf("@showPrivateValues")][SerializeField] int currentLookCost;
+    [ShowIf("@showPrivateValues")][SerializeField] int currentGrenadeCost;
     [Space]
     [ShowIf("@showPrivateValues")][SerializeField] Vector3 currentVirtualPosition;
 
@@ -35,6 +37,7 @@ public class UISelection : MonoBehaviour
         currentWalkCost = GameBalanceManager.instance.walkCost;
         currentRunCost = GameBalanceManager.instance.runCost;
         currentLookCost = GameBalanceManager.instance.lookCost;
+        currentGrenadeCost = GameBalanceManager.instance.grenadeCost;
         player = FindObjectOfType<NetworkedPlayer>();
     }
 
@@ -63,6 +66,7 @@ public class UISelection : MonoBehaviour
             {
                 currentWalkCost += remaining * GameBalanceManager.instance.costWalkUnitExtra;
                 currentRunCost += remaining * GameBalanceManager.instance.costRunUnitExtra;
+                currentGrenadeCost += remaining * GameBalanceManager.instance.costGrenadeUnitExtra;
             }
         }
     }
@@ -77,7 +81,7 @@ public class UISelection : MonoBehaviour
         {
             foreach (Action action in player.currentSelectedUnit.plan)
             {
-                if (action.actionType != PlayerAction.look)
+                if (action.actionType != PlayerAction.look && action.actionType != PlayerAction.grenade)
                 {
                     currentVirtualPosition = action.targetLocation;
                 }
@@ -92,10 +96,12 @@ public class UISelection : MonoBehaviour
         walkCost.cost.text = currentWalkCost.ToString();
         runCost.cost.text = currentRunCost.ToString();
         lookCost.cost.text = currentLookCost.ToString();
+        grenadeCost.cost.text = currentGrenadeCost.ToString();
 
         walkCost.CanAfford(currentWalkCost, playerPoints);
         runCost.CanAfford(currentRunCost, playerPoints);
         lookCost.CanAfford(currentLookCost, playerPoints);
+        grenadeCost.CanAfford(currentGrenadeCost, playerPoints);
 
         points.text = $"{playerPoints} / {GameBalanceManager.instance.maxPoints}";
     }
@@ -105,6 +111,7 @@ public class UISelection : MonoBehaviour
         currentWalkCost = GameBalanceManager.instance.walkCost;
         currentRunCost = GameBalanceManager.instance.runCost;
         currentLookCost = GameBalanceManager.instance.lookCost;
+        currentGrenadeCost = GameBalanceManager.instance.grenadeCost;
     }
 
     public void HideOptions()
@@ -129,6 +136,12 @@ public class UISelection : MonoBehaviour
     {
         player.currentSelectedUnit.currentPoints -= currentLookCost;
         SelectionMade(transform.position, PlayerAction.look);
+    }
+
+    public void Button_Grenade()
+    {
+        player.currentSelectedUnit.currentPoints -= currentGrenadeCost;
+        SelectionMade(transform.position, PlayerAction.grenade);
     }
 
     public void Button_Cancel()

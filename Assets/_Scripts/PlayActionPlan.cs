@@ -44,20 +44,7 @@ public class PlayActionPlan : MonoBehaviour
             if (unit.unitID == id)
             {
                 PlayerAction actionType = PlayerAction.walk;
-                switch (action)
-                {
-                    case 0:
-                        actionType = PlayerAction.walk;
-                        break;
-                    case 1:
-                        actionType = PlayerAction.run;
-                        break;
-                    case 2:
-                        actionType = PlayerAction.look;
-                        break;
-                    default:
-                        break;
-                }
+                actionType = (PlayerAction)action;
                 Action actionToAdd = new Action(position, actionType);
                 unit.plan.Add(actionToAdd);
                 return;
@@ -86,7 +73,7 @@ public class PlayActionPlan : MonoBehaviour
             u.RemoveLinePath();
             u.UnFreezeUnit();
         }
-        VisualIconsPool.instance.ResetAllEyes();
+        VisualIconsPool.instance.ResetAllPools();
         while (EveryUnitCompletedPlan() == false)
         {
             yield return new WaitForSeconds(0.5f);

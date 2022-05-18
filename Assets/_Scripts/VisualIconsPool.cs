@@ -2,11 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+class VisualPool
+{
+    public int id;
+    public List<GameObject> visuals = new List<GameObject>();
+    public List<GameObject> visualsUsed = new List<GameObject>();
+
+    public void HideVisuals()
+    {
+        foreach (GameObject v in visuals)
+        {
+            v.SetActive(false);
+        }
+    }
+
+    public void ResetPool()
+    {
+        foreach (GameObject v in visualsUsed)
+        {
+            v.SetActive(false);
+            visuals.Add(v);
+        }
+        visualsUsed.Clear();
+    }
+}
+
+
 public class VisualIconsPool : MonoBehaviour
 {
-    public List<GameObject> eyeVisuals = new List<GameObject>();
-
-    private List<GameObject> eyeUsed = new List<GameObject>();
+    [SerializeField] private List<VisualPool> visualPool = new List<VisualPool>();
 
     public static VisualIconsPool instance;
 
@@ -22,35 +47,38 @@ public class VisualIconsPool : MonoBehaviour
 
     void Start()
     {
-        foreach (var eye in eyeVisuals)
+        foreach (var pool in visualPool)
         {
-            eye.SetActive(false);
+            pool.HideVisuals();
         }
     }
 
-    public void PlaceEye(Vector3 from, Vector3 to)
+    public void PlaceVisual(Vector3 from, Vector3 to, int id)
     {
         from += Vector3.up;
         to += Vector3.up;
 
-        GameObject newEye = eyeVisuals[0];
-        VisualIcon ev = newEye.GetComponent<VisualIcon>();
-
-        newEye.SetActive(true);
-        ev.SetVisual(from, to);
-
-        eyeVisuals.Remove(newEye);
-        eyeUsed.Add(newEye);
+        foreach (VisualPool pool in visualPool)
+        {
+            if (pool.id == id)
+            {
+                GameObject visual = pool.visuals[0];
+                VisualIcon visualicon = visual.GetComponent<VisualIcon>();
+                visual.SetActive(true);
+                visualicon.SetVisual(from, to);
+                pool.visuals.Remove(visual);
+                pool.visualsUsed.Add(visual);
+                return;
+            }
+        }
     }
 
-    public void ResetAllEyes()
+    public void ResetAllPools()
     {
-        foreach (GameObject eye in eyeUsed)
+        foreach (var pool in visualPool)
         {
-            eye.SetActive(false);
-            eyeVisuals.Add(eye);
+            pool.ResetPool();
         }
-        eyeUsed.Clear();
     }
 
 }

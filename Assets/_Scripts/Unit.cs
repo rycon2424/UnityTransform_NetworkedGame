@@ -34,6 +34,8 @@ public class Unit : NetworkedObject
     [SerializeField] Transform lineOfSight;
     public UnitSight unitSight;
     [SerializeField] Slider healthBar;
+    [SerializeField] GameObject grenade;
+    [SerializeField] ParticleSystem grenadeExplosion;
     [Space]
     public List<Action> plan = new List<Action>();
 
@@ -110,14 +112,17 @@ public class Unit : NetworkedObject
         {
             SetLineRendererPos(transform.position);
         }
-        if (action != PlayerAction.look)
-        {
-            SetLineRendererPos(targetLocation);
-        }
         if (action == PlayerAction.look)
         {
-            VisualIconsPool.instance.PlaceEye(virtualPosition, targetLocation);
+            VisualIconsPool.instance.PlaceVisual(virtualPosition, targetLocation, 0);
+            return;
         }
+        if (action == PlayerAction.grenade)
+        {
+            VisualIconsPool.instance.PlaceVisual(virtualPosition, targetLocation, 1);
+            return;
+        }
+        SetLineRendererPos(targetLocation);
     }
 
     void SetLineRendererPos(Vector3 targetLocation)
@@ -169,6 +174,12 @@ public class Unit : NetworkedObject
                         lookAtPoint = true;
                         looking = true;
                         break;
+                    case PlayerAction.grenade:
+                        anim.Play("Grenade");
+                        yield return new WaitForSeconds(2);
+                        ThrownGrenade(action.targetLocation);
+                        yield return new WaitForSeconds(1);
+                        break;
                     default:
                         break;
                 }
@@ -176,7 +187,7 @@ public class Unit : NetworkedObject
                 agent.speed = agentSpeed;
                 anim.SetFloat("Movement", agent.speed);
 
-                if (action.actionType != PlayerAction.look)
+                if (action.actionType != PlayerAction.look && action.actionType != PlayerAction.grenade)
                 {
                     while (Vector3.Distance(transform.position, action.targetLocation) > 0.1f)
                     {
@@ -288,6 +299,41 @@ public class Unit : NetworkedObject
         return false;
     }
 
+    public void ThrownGrenade(Vector3 targetThrow)
+    {
+        Debug.Log($"unit {unitID} threw a grenade to {targetThrow}");
+        Vector3 throwOrigin = transform.position + Vector3.up;
+        RaycastHit hit;
+        Ray ray = new Ray(throwOrigin, targetThrow - throwOrigin);
+        if (Physics.Raycast(ray, out hit, 100f))
+        {
+            Debug.DrawLine(throwOrigin, hit.point, Color.yellow, 10);
+            StartCoroutine(GrenadeTrajectory(throwOrigin, hit.point));
+            return;
+        }
+        StartCoroutine(GrenadeTrajectory(throwOrigin, targetThrow));
+    }
+
+    IEnumerator GrenadeTrajectory(Vector3 startPosition ,Vector3 targetPos)
+    {
+        float time = 0;
+        float duration = 1;
+        Transform parentOfGrenade = grenade.transform.parent;
+        grenade.transform.parent = null;
+        grenade.SetActive(true);
+        while (time < duration)
+        {
+            grenade.transform.position = Vector3.Lerp(startPosition, targetPos, time / duration);
+            time += Time.deltaTime;
+            yield return null;
+        }
+        grenade.transform.position = targetPos;
+        grenadeExplosion.Play();
+        yield return new WaitForSeconds(2);
+        grenade.transform.parent = parentOfGrenade;
+        grenade.SetActive(false);
+    }
+
     public void Shoot()
     {
         shotVFX.Play();
@@ -395,5 +441,6 @@ public enum PlayerAction
 {
     walk,
     run,
-    look
+    look,
+    grenade
 }

@@ -11,9 +11,11 @@ public class GameBalanceManager : MonoBehaviour
     public int walkCost = 15;
     public int runCost = 10;
     public int lookCost = 5;
+    public int grenadeCost = 15;
     [Space]
     public int costWalkUnitExtra = 2;
     public int costRunUnitExtra = 1;
+    public int costGrenadeUnitExtra = 3;
     [Space]
     public int distanceTillCost = 8;
 
