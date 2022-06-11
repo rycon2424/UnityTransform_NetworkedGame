@@ -11,6 +11,7 @@ public class MainMenu : MonoBehaviour
     [Space]
     [SerializeField] TMP_Text playerName;
     public TMP_InputField ipAdress;
+    public TMP_InputField port;
     [Space]
     [SerializeField] TMP_Text playerCount;
     [SerializeField] TMP_Text playerNames;

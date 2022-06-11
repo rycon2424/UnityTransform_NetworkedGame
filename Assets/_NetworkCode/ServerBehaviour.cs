@@ -25,7 +25,7 @@ public class ServerBehaviour : MonoBehaviour
     {
         m_Driver = NetworkDriver.Create();
         var endpoint = NetworkEndPoint.AnyIpv4;
-        endpoint.Port = 8080;
+        endpoint.Port = (ushort)int.Parse(FindObjectOfType<MainMenu>().port.text);
 
         if (m_Driver.Bind(endpoint) != 0)
             Debug.Log("Failed to bind to port 9000");

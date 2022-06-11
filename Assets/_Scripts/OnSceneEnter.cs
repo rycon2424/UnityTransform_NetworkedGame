@@ -13,11 +13,14 @@ public class OnSceneEnter : MonoBehaviour
         switch (PlayActionPlan.playerCount)
         {
             case 1:
+                military.SetActive(true);
                 break;
             case 2:
+                military.SetActive(true);
                 terrorists.SetActive(true);
                 break;
             case 3:
+                military.SetActive(true);
                 terrorists.SetActive(true);
                 special.SetActive(true);
                 break;

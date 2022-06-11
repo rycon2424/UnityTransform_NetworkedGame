@@ -30,7 +30,7 @@ public class ClientBehaviour : MonoBehaviour
         m_Driver = NetworkDriver.Create();
         m_Connection = default(NetworkConnection);
 
-        ushort port = 8080;
+        ushort port = (ushort)int.Parse(FindObjectOfType<MainMenu>().port.text);
 
         var endpoint = NetworkEndPoint.Parse(mainMenu.ipAdress.text, port, NetworkFamily.Ipv4);
         endpoint.Port = port;
