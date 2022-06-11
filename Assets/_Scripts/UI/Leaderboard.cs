@@ -9,6 +9,11 @@ public class Leaderboard : MonoBehaviour
 
     void Start()
     {
+        UpdateBoard();
+    }
+
+    public void UpdateBoard()
+    {
         foreach (var user in users)
         {
             user.playerName.text = "Loading...";

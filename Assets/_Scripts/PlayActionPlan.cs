@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Events;
 using Sirenix.OdinInspector;
+using TMPro;
 
 public class PlayActionPlan : MonoBehaviour
 {
@@ -12,6 +14,9 @@ public class PlayActionPlan : MonoBehaviour
     [ReadOnly] [ShowInInspector] public static int playerCount;
     [Space]
     public UnityEvent OnSequenceEnd;
+    [Space]
+    public GameObject gameOver;
+    public TMP_Text gameOverText;
 
     private NetworkedPlayer player;
 
@@ -113,7 +118,7 @@ public class PlayActionPlan : MonoBehaviour
         int winner = -1;
         if (CheckIfGameOver(out winner))
         {
-            Debug.Log("winner = " + winner);
+            GameOver(winner);
         }
         else
         {
@@ -163,5 +168,31 @@ public class PlayActionPlan : MonoBehaviour
             }
         }
         return true;
+    }
+
+    public void GameOver(int winnerID)
+    {
+        switch (winnerID)
+        {
+            case 1:
+                gameOverText.text = "The Military Won!";
+                break;
+            case 2:
+                gameOverText.text = "The Terrorists Won!";
+                break;
+            case 3:
+                gameOverText.text = "The Special Forces Won!";
+                break;
+            default:
+                break;
+        }
+        gameOver.SetActive(true);
+        Invoke("RestartGame", 5);
+    }
+
+    void RestartGame()
+    {
+        SceneManager.UnloadSceneAsync("FirstMap");
+        SceneManager.LoadScene("MainMenu");
     }
 }

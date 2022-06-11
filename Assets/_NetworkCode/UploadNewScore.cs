@@ -7,9 +7,9 @@ using Sirenix.OdinInspector;
 public class UploadNewScore : MonoBehaviour
 {
     [Button]
-    void UploadScore(string username, int score)
+    public void UploadScore(int highscore)
     {
-        StartCoroutine(UploadScoreToDatabase(username, score));
+        StartCoroutine(UploadScoreToDatabase(MainMenu.username, highscore));
     }
 
     IEnumerator UploadScoreToDatabase(string username, int score)

@@ -17,6 +17,7 @@ public class LoginDatabase : MonoBehaviour
     [Header("Login")]
     public TMP_InputField loginName;
     public TMP_InputField loginPassword;
+    public UserOnBoard yourScore;
 
     [Header("Register")]
     public TMP_InputField registerName;
@@ -83,7 +84,13 @@ public class LoginDatabase : MonoBehaviour
         {
             infoText.text = $"Logged in as {loginName.text}!";
             username.text = loginName.text;
-            //Debug.Log($"Login succes, high score = {www.downloadHandler.text[1]}");
+
+            string playerscore = www.downloadHandler.text.Remove(0, 1);
+
+            yourScore.playerName.text = username.text;
+            yourScore.playerScore.text = playerscore;
+
+            MainMenu.username = username.text;
             loginDone.Invoke();
         }
         else

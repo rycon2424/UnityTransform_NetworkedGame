@@ -4,9 +4,11 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using TMPro;
+using Sirenix.OdinInspector;
 
 public class MainMenu : MonoBehaviour
 {
+    [ReadOnly][ShowInInspector] public static string username;
     [SerializeField] int playersToPlay = 2;
     [Space]
     [SerializeField] TMP_Text playerName;
@@ -25,6 +27,11 @@ public class MainMenu : MonoBehaviour
     public string GetPlayerName()
     {
         return playerName.text;
+    }
+
+    public void UpdateUsername()
+    {
+        username = playerName.text;
     }
 
     public void EnoughPlayersToStart(int players)

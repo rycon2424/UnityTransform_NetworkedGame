@@ -15,6 +15,7 @@ public class ServerBehaviour : MonoBehaviour
     public int playersReady = 0;
     public int maxAllowedPlayers = 3;
     [Space]
+    public string thisPlayerName;
     public MainMenu mainMenu;
     public List<string> players = new List<string>();
 
