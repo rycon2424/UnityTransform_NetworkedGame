@@ -329,6 +329,16 @@ public class Unit : NetworkedObject
         }
         grenade.transform.position = targetPos;
         grenadeExplosion.Play();
+        yield return null;
+        List<Unit> allUnits = new List<Unit>();
+        allUnits.AddRange(FindObjectsOfType<Unit>());
+        foreach (Unit u in allUnits)
+        {
+            if (Vector3.Distance(u.transform.position, grenade.transform.position) < GameBalanceManager.instance.grenadeRange)
+            {
+                u.TakeDamage(GameBalanceManager.instance.grenadeDamage, this);
+            }
+        }
         yield return new WaitForSeconds(2);
         grenade.transform.parent = parentOfGrenade;
         grenade.SetActive(false);

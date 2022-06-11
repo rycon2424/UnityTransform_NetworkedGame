@@ -6,6 +6,7 @@ public class OnSceneEnter : MonoBehaviour
 {
     void Start()
     {
+        FindObjectOfType<PlayActionPlan>().allUnits = new List<Unit>();
         FindObjectOfType<PlayActionPlan>().FindUnits();
     }
 }

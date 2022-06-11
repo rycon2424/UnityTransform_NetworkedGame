@@ -49,7 +49,14 @@ public class ClientBehaviour : MonoBehaviour
 
     public void Disconnect()
     {
-        SendServerRequest("4 " + mainMenu.GetPlayerName());
+        try
+        {
+            SendServerRequest("4 " + mainMenu.GetPlayerName());
+        }
+        catch (System.Exception)
+        {
+
+        }
         m_Connection.Disconnect(m_Driver);
     }
 

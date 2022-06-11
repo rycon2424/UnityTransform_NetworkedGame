@@ -18,6 +18,9 @@ public class GameBalanceManager : MonoBehaviour
     public int costGrenadeUnitExtra = 3;
     [Space]
     public int distanceTillCost = 8;
+    [Space]
+    public float grenadeRange = 3;
+    public int grenadeDamage = 25;
 
     public static GameBalanceManager instance;
 
