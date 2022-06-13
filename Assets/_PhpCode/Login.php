@@ -5,6 +5,12 @@
    $username=$_POST["name"];
    $password=$_POST["password"];
 
+   if (!filter_var($username, FILTER_SANITIZE_STRING) || !filter_var($password, FILTER_SANITIZE_URL))
+   {
+      echo"ERROR CODE 9: Use of illigal characters detected";
+      exit();
+   }
+
    $namecheckquery= "SELECT username, salt, hash, score FROM UsersLogin WHERE username= '$username';";
 
    $namecheck = mysqli_query($mysqli, $namecheckquery) or die(" ERROR CODE 2: namecheck failed DATABASE Error");
@@ -25,8 +31,8 @@
        echo" ERROR CODE 6: User does not exist or entered wrong password";
        exit();
    }
-
-    echo $existinginfo["score"];
+    echo "0";
+    echo  $username;
 
 ?>
 

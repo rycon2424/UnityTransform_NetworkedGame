@@ -5,6 +5,9 @@
    $playerusername = $_POST["username"];
    $newscore = $_POST["score"];
 
+   $playerusername = filter_var($playerusername, FILTER_SANITIZE_STRING);
+   $newscore = filter_var($newscore, FILTER_SANITIZE_STRING);
+
    $oldscorequery = "SELECT score FROM UsersLogin WHERE username='$playerusername'";
 
    $result = $mysqli -> query($oldscorequery);

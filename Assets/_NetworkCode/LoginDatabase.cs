@@ -47,7 +47,7 @@ public class LoginDatabase : MonoBehaviour
         }
         else
         {
-            if (www.downloadHandler.text != "0")
+            if (www.downloadHandler.text != "00")
             {
                 infoText.text = www.downloadHandler.text;
             }

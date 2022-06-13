@@ -4,6 +4,13 @@
 
    $username=$_POST["name"];
    $password=$_POST["password"];
+
+   if (!filter_var($username, FILTER_SANITIZE_STRING) || !filter_var($password, FILTER_SANITIZE_URL))
+   {
+      echo"ERROR CODE 9: Use of illigal characters detected";
+      exit();
+   }
+
    $namecheckquery= "SELECT username FROM UsersLogin WHERE username= '$username';";
 
    //echo "Searched for a duplicate of " . $username .  $namecheckquery;
