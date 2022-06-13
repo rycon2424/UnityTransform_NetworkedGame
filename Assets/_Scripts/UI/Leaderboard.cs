@@ -35,20 +35,27 @@ public class Leaderboard : MonoBehaviour
         else
         {
             string phrase = www.downloadHandler.text.ToString();
+            //phrase.Remove(0, 1);
             string[] words = phrase.Split('@');
+            Debug.Log(words[0]);
             SetupBoard(words);
         }
     }
 
     void SetupBoard(string[] info)
     {
-        int temp = 0;
-        foreach (var user in users)
-        {
-            user.playerName.text = info[temp];
-            user.playerScore.text = info[temp + 1];
-            temp += 2;
-        }
+        //int temp = 0;
+        //foreach (var user in users)
+        //{
+        //    user.playerName.text = info[temp];
+        //    user.playerScore.text = info[temp + 1];
+        //    temp += 2;
+        //}
     }
+
+}
+
+class LeaderboardOutcome
+{
 
 }
