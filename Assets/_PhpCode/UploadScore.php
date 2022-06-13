@@ -15,11 +15,11 @@
    $result -> free_result();
 
     $highscoreQuery = "UPDATE UsersLogin SET score= '$newscore' WHERE username= '$playerusername' AND '(int)$newscore' > '(int)$row[0]'";
-    $updateHighscore = $mysqli -> query($highscoreQuery);
+    $updateHighscore = $mysqli -> query($highscoreQuery) or die("0");
 
     $updateTimeQuery = "UPDATE `UsersLogin` SET `lastplayed` = CURRENT_DATE() WHERE `UsersLogin`.`username` = '$playerusername';";
-    $updateTime = $mysqli -> query($updateTimeQuery);
+    $updateTime = $mysqli -> query($updateTimeQuery) or die("0");
 
     $result -> free_result();
-    echo " 0";
+    echo "1";
 ?>

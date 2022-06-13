@@ -26,7 +26,7 @@ public class UploadNewScore : MonoBehaviour
         }
         else
         {
-            if (www.downloadHandler.text != "0")
+            if (www.downloadHandler.text == "11")
             {
                 Debug.Log(www.downloadHandler.text);
             }

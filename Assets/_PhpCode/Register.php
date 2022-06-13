@@ -27,5 +27,5 @@
     $insertuserquery="INSERT INTO UsersLogin (username, hash, salt) VALUES ('$username','$hash','$salt');";
     mysqli_query($mysqli,$insertuserquery)or die(" ERROR CODE 4: insert player failed" . $mysqli -> error);
 
-    echo("0");
+    echo "1";
 ?>

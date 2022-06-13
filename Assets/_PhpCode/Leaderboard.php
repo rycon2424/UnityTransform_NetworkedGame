@@ -12,15 +12,31 @@
 
      echo "<br> <br> <b>  Top Players of all time </b> <br>";
      echo "-";
-     for ($x = 1; $x < 11; $x++) 
-     {
-               $myObj->name = $posts[$x - 1];
-               $myJson = json_encode($myObj);
-               echo "<br> " . $myJson;
-     }
+     foreach ($posts as $row) 
+     {     
+            foreach ($row as $element)
+            {
+	$i++;
+	switch ($i) 
+	{
+    	case 1:
+		$myObjT->Playername = $element;
+        	break;
+    	case 2:
+		$myObjT->Score = $element;
+        	break;
+    	case 3:
+		$myObjT->LastPlayed = $element;
+               		$myJsonT = json_encode($myObjT);
+               		echo "<br> " . $myJsonT;
+		$i = 0;
+        	break;
+	}
+            }
+      }
     echo "<br> -";
 
-     $queryThisMonth = "SELECT username, score, lastplayed FROM UsersLogin WHERE lastplayed BETWEEN (CURRENT_DATE() - INTERVAL 1 MONTH) AND CURRENT_DATE() ORDER BY convert(`score`, UNSIGNED INTEGER)";
+     $queryThisMonth = "SELECT username, score, lastplayed FROM UsersLogin WHERE lastplayed BETWEEN (CURRENT_DATE() - INTERVAL 1 MONTH) AND CURRENT_DATE() ORDER BY convert(`score`, UNSIGNED INTEGER) DESC";
      $thisMonthResult = $mysqli->query($queryThisMonth);
 
      while($rowMonth = mysqli_fetch_assoc($thisMonthResult))
@@ -30,12 +46,34 @@
 
      echo "<br> <br> <br> <b> Top Players this month: Unique playercount: " . count($postsMonth) . "</b>" ;
      echo "<br> -";
-     for ($x = 1; $x < 11; $x++)
-     {
-               $myObjMonth->name = $postsMonth[$x - 1];
-               $myJsonMonth = json_encode($myObjMonth);
-               echo "<br> " . $myJsonMonth;
-     }
+     $limit = 10;
+     foreach ($postsMonth as $rowMonth) 
+     {     
+            $limit--;
+            foreach ($rowMonth as $element)
+            {
+	$i++;
+	switch ($i) 
+	{
+    	case 1:
+		$myObjT->Playername = $element;
+        	break;
+    	case 2:
+		$myObjT->Score = $element;
+        	break;
+    	case 3:
+		$myObjT->LastPlayed = $element;
+               		$myJsonT = json_encode($myObjT);
+               		echo "<br> " . $myJsonT;
+		$i = 0;
+        	break;
+	}
+            }
+            if ($limit < 1)
+            {
+	break;
+            }
+      }
      echo "<br> -";
 
 ?>

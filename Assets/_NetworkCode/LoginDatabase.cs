@@ -47,7 +47,7 @@ public class LoginDatabase : MonoBehaviour
         }
         else
         {
-            if (www.downloadHandler.text != "00")
+            if (www.downloadHandler.text != "11")
             {
                 infoText.text = www.downloadHandler.text;
             }
@@ -80,7 +80,7 @@ public class LoginDatabase : MonoBehaviour
         {
             infoText.text = www.error;
         }
-        else if (www.downloadHandler.text[0] == '0')
+        else if (www.downloadHandler.text[1] == '1')
         {
             infoText.text = $"Logged in as {loginName.text}!";
             username.text = loginName.text;

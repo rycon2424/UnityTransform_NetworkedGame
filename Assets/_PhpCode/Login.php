@@ -31,7 +31,7 @@
        echo" ERROR CODE 6: User does not exist or entered wrong password";
        exit();
    }
-    echo "0";
+    echo "1";
     echo  $username;
 
 ?>

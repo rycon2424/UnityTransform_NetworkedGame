@@ -1,8 +1,8 @@
 <?php
-   $db_user = '';
-   $db_pass = '';
-   $db_host = '';
-   $db_name = '';
+   $db_user = 'boskoivkovic';
+   $db_pass = 'Zeix7Ohh5c';
+   $db_host = 'localhost';
+   $db_name = 'boskoivkovic';
 
 /* Open a connection */
 $mysqli = new mysqli("$db_host","$db_user","$db_pass","$db_name");
@@ -13,7 +13,7 @@ if ($mysqli->connect_errno) {
    exit();
 }
 
-echo "0";
+echo "1";
 
 function showerror($error,$errornr) 
 {
