@@ -108,7 +108,8 @@ public class LoginDatabase : MonoBehaviour
                 string playerscore = phrase.Remove(0, 2);
 
                 yourScore.playerName.text = username.text;
-                playerscore = playerscore.Replace(username.text, "");
+                playerscore = playerscore.Replace((username.text + " Highscore:"), "");
+                playerscore = playerscore.Replace("hello", "");
                 yourScore.playerScore.text = playerscore;
 
                 MainMenu.username = username.text;
