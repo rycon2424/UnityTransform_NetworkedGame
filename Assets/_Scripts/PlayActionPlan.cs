@@ -13,7 +13,6 @@ public class PlayActionPlan : MonoBehaviour
     [ReadOnly] [ShowInInspector] public static bool ready;
     [ReadOnly] [ShowInInspector] public static int playerCount;
     [Space]
-    public UploadNewScore scoreUploader;
     public UnityEvent OnSequenceEnd;
     [Space]
     public GameObject gameOver;
@@ -187,7 +186,7 @@ public class PlayActionPlan : MonoBehaviour
             default:
                 break;
         }
-        scoreUploader.UploadScore(UploadNewScore.instance.GetPoints());
+        UploadNewScore.instance.UploadScore(UploadNewScore.instance.GetPoints());
         gameOver.SetActive(true);
         Invoke("RestartGame", 5);
     }
