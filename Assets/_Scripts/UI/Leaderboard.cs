@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,7 @@ using UnityEngine.Networking;
 public class Leaderboard : MonoBehaviour
 {
     public UserOnBoard[] users;
+    [SerializeField] List<LeaderboardOutcome> outcomes = new List<LeaderboardOutcome>();
 
     void Start()
     {
@@ -35,27 +37,44 @@ public class Leaderboard : MonoBehaviour
         else
         {
             string phrase = www.downloadHandler.text.ToString();
-            //phrase.Remove(0, 1);
-            string[] words = phrase.Split('@');
-            Debug.Log(words[0]);
-            SetupBoard(words);
+            phrase = phrase.Replace("<br>", "");
+
+            for (int i = 0; i < 10; i++)
+            {
+                string value = Between(phrase, "{", "}");
+                outcomes.Add(JsonUtility.FromJson<LeaderboardOutcome>(value));
+                phrase = phrase.Replace(value, "");
+            }
+
+            SetupBoard();
         }
     }
 
-    void SetupBoard(string[] info)
+    void SetupBoard()
     {
-        //int temp = 0;
-        //foreach (var user in users)
-        //{
-        //    user.playerName.text = info[temp];
-        //    user.playerScore.text = info[temp + 1];
-        //    temp += 2;
-        //}
+        for (int i = 0; i < 10; i++)
+        {
+            users[i].playerName.text = outcomes[i].Playername;
+            users[i].playerScore.text = outcomes[i].Score.ToString();
+        }
     }
+
+    public string Between(string STR, string FirstString, string LastString)
+    {
+        string FinalString;
+        int Pos1 = STR.IndexOf(FirstString) + FirstString.Length;
+        int Pos2 = STR.IndexOf(LastString);
+        FinalString = STR.Substring(Pos1 - 1, Pos2 - Pos1 +2);
+        return FinalString;
+    }
+
 
 }
 
+[System.Serializable]
 class LeaderboardOutcome
 {
-
+    public string Playername;
+    public int Score;
+    public DateTime LastPlayed;
 }

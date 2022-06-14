@@ -28,13 +28,13 @@
     	case 3:
 		$myObjT->LastPlayed = $element;
                		$myJsonT = json_encode($myObjT);
-               		echo "<br> " . $myJsonT;
+               		echo "<br>" . $myJsonT;
 		$i = 0;
         	break;
 	}
             }
       }
-    echo "<br> -";
+    echo "<br> _";
 
      $queryThisMonth = "SELECT username, score, lastplayed FROM UsersLogin WHERE lastplayed BETWEEN (CURRENT_DATE() - INTERVAL 1 MONTH) AND CURRENT_DATE() ORDER BY convert(`score`, UNSIGNED INTEGER) DESC";
      $thisMonthResult = $mysqli->query($queryThisMonth);
@@ -64,7 +64,7 @@
     	case 3:
 		$myObjT->LastPlayed = $element;
                		$myJsonT = json_encode($myObjT);
-               		echo "<br> " . $myJsonT;
+               		echo "<br>" . $myJsonT;
 		$i = 0;
         	break;
 	}
@@ -74,6 +74,6 @@
 	break;
             }
       }
-     echo "<br> -";
+     echo "<br> _";
 
 ?>

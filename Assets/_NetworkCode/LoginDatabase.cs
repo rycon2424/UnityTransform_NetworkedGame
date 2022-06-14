@@ -85,9 +85,10 @@ public class LoginDatabase : MonoBehaviour
             infoText.text = $"Logged in as {loginName.text}!";
             username.text = loginName.text;
 
-            string playerscore = www.downloadHandler.text.Remove(0, 1);
+            string playerscore = www.downloadHandler.text.Remove(0, 2);
 
             yourScore.playerName.text = username.text;
+            playerscore = playerscore.Replace(username.text, "");
             yourScore.playerScore.text = playerscore;
 
             MainMenu.username = username.text;

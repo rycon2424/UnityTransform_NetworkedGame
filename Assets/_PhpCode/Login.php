@@ -32,7 +32,8 @@
        exit();
    }
     echo "1";
-    echo  $username;
+    echo $username;
+    echo $existinginfo["score"];
 
 ?>
 
