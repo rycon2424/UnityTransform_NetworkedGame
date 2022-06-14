@@ -187,7 +187,7 @@ public class PlayActionPlan : MonoBehaviour
             default:
                 break;
         }
-        scoreUploader.UploadScore(UploadNewScore.currentPoints);
+        scoreUploader.UploadScore(UploadNewScore.instance.GetPoints());
         gameOver.SetActive(true);
         Invoke("RestartGame", 5);
     }

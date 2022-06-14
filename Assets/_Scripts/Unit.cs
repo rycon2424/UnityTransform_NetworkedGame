@@ -331,6 +331,7 @@ public class Unit : NetworkedObject
         }
         grenade.transform.position = targetPos;
         grenadeExplosion.Play();
+        grenade.GetComponent<AudioSource>().Play();
         yield return null;
         List<Unit> allUnits = new List<Unit>();
         allUnits.AddRange(FindObjectsOfType<Unit>());
@@ -357,7 +358,7 @@ public class Unit : NetworkedObject
         {
             if (isMine)
             {
-                UploadNewScore.currentPoints += (20 - (health / 10));
+                UploadNewScore.instance.AddPoints(20 - (health / 10));
             }
             LoseTarget();
         }

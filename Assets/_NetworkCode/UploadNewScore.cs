@@ -3,10 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using Sirenix.OdinInspector;
+using TMPro;
 
 public class UploadNewScore : MonoBehaviour
 {
-    public static int currentPoints;
+    [SerializeField] int currentPoints;
+    [SerializeField] TMP_Text pointsText;
+
+    public static UploadNewScore instance;
+
+    private void Awake()
+    {
+        if (instance != null)
+        {
+            Destroy(instance);
+        }
+        instance = this;
+    }
+
+    public void AddPoints(int points)
+    {
+        currentPoints += points;
+        pointsText.text = "Score: " + currentPoints.ToString();
+    }
+
+    public int GetPoints()
+    {
+        return currentPoints;
+    }
 
     [Button]
     public void UploadScore(int highscore)
