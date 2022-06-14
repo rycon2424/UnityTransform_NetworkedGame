@@ -1,6 +1,6 @@
 <?php
 
-include "Connection.php";
+include "UnityAutoLoginServer.php";
 
 $username=$_POST["name"];
 $password=$_POST["password"];

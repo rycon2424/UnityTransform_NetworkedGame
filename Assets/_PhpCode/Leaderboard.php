@@ -1,6 +1,6 @@
 <?php
 
-include "Connection.php";
+include "UnityAutoLoginServer.php";
 
 $query = "SELECT username, score, lastplayed FROM UsersLogin ORDER BY convert(`score`, UNSIGNED INTEGER) DESC LIMIT 10";
 $result = $mysqli->query($query);

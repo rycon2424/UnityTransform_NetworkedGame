@@ -1,15 +1,6 @@
 <?php
-//$db_user = 'boskoivkovic';
-//$db_pass = 'Zeix7Ohh5c';
-
-$db_user = $_POST["username"];
-$db_pass = $_POST["password"];
-
-if (empty($_POST["username"]) || empty($_POST["password"]))
-{
-    echo "Failed because user or pass is not set, error code 0";
-    exit();
-}
+$db_user = 'boskoivkovic';
+$db_pass = 'Zeix7Ohh5c';
 
 $db_host = 'localhost';
 $db_name = 'boskoivkovic';

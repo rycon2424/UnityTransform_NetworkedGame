@@ -1,12 +1,19 @@
 <?php
 
-include "Connection.php";
+include "UnityAutoLoginServer.php";
 
 $playerusername = $_SESSION['username']; // Get user from session
 $newscore = $_POST["score"];
 
-$playerusername = filter_var($playerusername, FILTER_SANITIZE_STRING);
-$newscore = filter_var($newscore, FILTER_SANITIZE_STRING);
+if (empty($playerusername))
+{
+	echo "0 there is no player logged in the session right now, Log in here: https://studenthome.hku.nl/~bosko.ivkovic/KernMod_4/UserLoginWeb.php";
+}
+
+if (!filter_var($playerusername, FILTER_SANITIZE_STRING) || !filter_var($playerusername, FILTER_SANITIZE_STRING))
+{
+	echo "0 Error the score/username sended contains illigal characters";
+}
 
 $oldscorequery = "SELECT score FROM UsersLogin WHERE username='$playerusername'";
 
