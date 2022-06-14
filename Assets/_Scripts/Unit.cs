@@ -40,8 +40,9 @@ public class Unit : NetworkedObject
     public List<Action> plan = new List<Action>();
 
     [HideInInspector] public Animator anim;
-    NavMeshAgent agent;
-    LineRenderer lr;
+    private NavMeshAgent agent;
+    private LineRenderer lr;
+    private AudioSource gunSFX;
     private bool breakOutCombat;
 
     Vector3 lookPoint;
@@ -57,6 +58,7 @@ public class Unit : NetworkedObject
 
         anim = GetComponent<Animator>();
         agent = GetComponent<NavMeshAgent>();
+        gunSFX = GetComponent<AudioSource>();
 
         lr = GetComponent<LineRenderer>();
         lr.SetPosition(0, transform.position + Vector3.up);
@@ -347,10 +349,16 @@ public class Unit : NetworkedObject
     public void Shoot()
     {
         shotVFX.Play();
+        gunSFX.volume = Random.Range(0.1f, 0.3f);
+        gunSFX.Play();
         Unit targetUnit = targetTransform.GetComponent<Unit>();
         targetUnit.TakeDamage(damage, this);
         if (targetUnit.health <= 0)
         {
+            if (isMine)
+            {
+                UploadNewScore.currentPoints += (20 - (health / 10));
+            }
             LoseTarget();
         }
     }
@@ -369,6 +377,7 @@ public class Unit : NetworkedObject
             StopCoroutine("RunningPlan");
             anim.SetTrigger("Death");
             dead = true;
+            GetComponent<Collider>().enabled = false;
 
             unitSight.HideMesh();
             agent.SetDestination(transform.position);

@@ -6,6 +6,8 @@ using Sirenix.OdinInspector;
 
 public class UploadNewScore : MonoBehaviour
 {
+    public static int currentPoints;
+
     [Button]
     public void UploadScore(int highscore)
     {
@@ -35,5 +37,6 @@ public class UploadNewScore : MonoBehaviour
                 Debug.Log(www.error);
             }
         }
+        currentPoints = 0;
     }
 }

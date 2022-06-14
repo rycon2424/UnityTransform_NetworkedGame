@@ -44,7 +44,7 @@
               $postsMonth[] = $rowMonth;
      }
 
-     echo "<br> <br> <br> <b> Top Players this month: Unique playercount: " . count($postsMonth) . "</b>" ;
+     echo "<br> <br> <br> <b> Top Players this month: Unique playercount this month: " . count($postsMonth) . "</b>" ;
      echo "<br> -";
      $limit = 10;
      foreach ($postsMonth as $rowMonth) 
