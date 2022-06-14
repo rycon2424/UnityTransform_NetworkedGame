@@ -38,10 +38,12 @@ public class Leaderboard : MonoBehaviour
         {
             string phrase = www.downloadHandler.text.ToString();
             phrase = phrase.Replace("<br>", "");
+            string sessionID = StringHandler.Between(phrase, "(", ")");
+            phrase = phrase.Replace(sessionID, "");
 
             for (int i = 0; i < 10; i++)
             {
-                string value = Between(phrase, "{", "}");
+                string value = StringHandler.Between(phrase, "{", "}");
                 outcomes.Add(JsonUtility.FromJson<LeaderboardOutcome>(value));
                 phrase = phrase.Replace(value, "");
             }
@@ -58,17 +60,18 @@ public class Leaderboard : MonoBehaviour
             users[i].playerScore.text = outcomes[i].Score.ToString();
         }
     }
+}
 
-    public string Between(string STR, string FirstString, string LastString)
+public static class StringHandler
+{
+    public static string Between(string STR, string FirstString, string LastString)
     {
         string FinalString;
         int Pos1 = STR.IndexOf(FirstString) + FirstString.Length;
         int Pos2 = STR.IndexOf(LastString);
-        FinalString = STR.Substring(Pos1 - 1, Pos2 - Pos1 +2);
+        FinalString = STR.Substring(Pos1 - 1, Pos2 - Pos1 + 2);
         return FinalString;
     }
-
-
 }
 
 [System.Serializable]

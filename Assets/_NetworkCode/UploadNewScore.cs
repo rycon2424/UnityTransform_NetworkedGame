@@ -50,17 +50,6 @@ public class UploadNewScore : MonoBehaviour
         {
             Debug.Log(www.error);
         }
-        else
-        {
-            if (www.downloadHandler.text == "11")
-            {
-                Debug.Log(www.downloadHandler.text);
-            }
-            else
-            {
-                Debug.Log(www.error);
-            }
-        }
         currentPoints = 0;
     }
 }

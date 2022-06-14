@@ -47,14 +47,24 @@ public class LoginDatabase : MonoBehaviour
         }
         else
         {
-            if (www.downloadHandler.text != "11")
+            if (www.downloadHandler.text[0] == '1')
             {
-                infoText.text = www.downloadHandler.text;
+                string phrase = www.downloadHandler.text;
+                string sessionID = StringHandler.Between(phrase, "(", ")");
+                phrase = phrase.Replace(sessionID, "");
+                phrase = phrase.Replace("<br>", "");
+
+                infoText.text = phrase;
+
+                if (phrase == "11")
+                {
+                    registrationDone.Invoke();
+                    infoText.text = "Completed Registration";
+                }
             }
             else
             {
-                registrationDone.Invoke();
-                infoText.text = "Completed Registration";
+                infoText.text = www.downloadHandler.text;
             }
         }
     }
@@ -80,19 +90,27 @@ public class LoginDatabase : MonoBehaviour
         {
             infoText.text = www.error;
         }
-        else if (www.downloadHandler.text[1] == '1')
+        else if (www.downloadHandler.text[0] == '1')
         {
-            infoText.text = $"Logged in as {loginName.text}!";
-            username.text = loginName.text;
+            string phrase = www.downloadHandler.text;
+            string sessionID = StringHandler.Between(phrase, "(", ")");
+            phrase = phrase.Replace(sessionID, "");
+            phrase = phrase.Replace("<br>", "");
 
-            string playerscore = www.downloadHandler.text.Remove(0, 2);
+            if (phrase[1] == '1')
+            {
+                infoText.text = $"Logged in as {loginName.text}!";
+                username.text = loginName.text;
 
-            yourScore.playerName.text = username.text;
-            playerscore = playerscore.Replace(username.text, "");
-            yourScore.playerScore.text = playerscore;
+                string playerscore = phrase.Remove(0, 2);
 
-            MainMenu.username = username.text;
-            loginDone.Invoke();
+                yourScore.playerName.text = username.text;
+                playerscore = playerscore.Replace(username.text, "");
+                yourScore.playerScore.text = playerscore;
+
+                MainMenu.username = username.text;
+                loginDone.Invoke();
+            }
         }
         else
         {
