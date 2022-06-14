@@ -5,6 +5,12 @@ include "Connection.php";
 $username=$_POST["name"];
 $password=$_POST["password"];
 
+if (!isset($username) || !isset($password))
+{
+	echo"ERROR CODE 8: No username or password received";
+	exit();
+}
+
 if (!filter_var($username, FILTER_SANITIZE_STRING) || !filter_var($password, FILTER_SANITIZE_URL))
 {
 	echo"ERROR CODE 9: Use of illigal characters detected";

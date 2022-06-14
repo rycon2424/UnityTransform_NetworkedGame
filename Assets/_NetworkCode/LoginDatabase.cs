@@ -92,10 +92,13 @@ public class LoginDatabase : MonoBehaviour
         }
         else if (www.downloadHandler.text[0] == '1')
         {
+            Debug.Log(www.downloadHandler.text);
             string phrase = www.downloadHandler.text;
             string sessionID = StringHandler.Between(phrase, "(", ")");
             phrase = phrase.Replace(sessionID, "");
             phrase = phrase.Replace("<br>", "");
+
+            infoText.text = phrase;
 
             if (phrase[1] == '1')
             {

@@ -5,6 +5,12 @@ include "Connection.php";
 $username=$_POST["name"];
 $password=$_POST["password"];
 
+if (!isset($username) || !isset($password))
+{
+	echo"ERROR CODE 8: No username or password received";
+	exit();
+}
+
 if (!filter_var($username, FILTER_SANITIZE_STRING) || !filter_var($password, FILTER_SANITIZE_URL))
 {
 	echo"ERROR CODE 9: Use of illigal characters detected";
@@ -31,8 +37,11 @@ if ($hash != $loginhash)
 	echo" ERROR CODE 6: User does not exist or entered wrong password";
 	exit();
 }
+
+$_SESSION['username'] = $username;
+
 echo "1";
-echo $username;
+echo $_SESSION['username'];
 echo $existinginfo["score"];
 
 ?>

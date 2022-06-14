@@ -2,7 +2,7 @@
 
 include "Connection.php";
 
-$playerusername = $_POST["username"];
+$playerusername = $_SESSION['username']; // Get user from session
 $newscore = $_POST["score"];
 
 $playerusername = filter_var($playerusername, FILTER_SANITIZE_STRING);
